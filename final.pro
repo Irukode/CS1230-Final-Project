@@ -65,6 +65,8 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
+    shaders/metal.frag \
+    shaders/metal.vert \
     shaders/normals/normals.vert \
     shaders/normals/normals.frag \
     shaders/normals/normals.gsh \

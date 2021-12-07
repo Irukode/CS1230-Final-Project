@@ -67,7 +67,9 @@ OBJECTS       = mainwindow.o \
 		qrc_resources.o \
 		moc_mainwindow.o \
 		moc_view.o
-DIST          = shaders/normals/normals.vert \
+DIST          = shaders/metal.frag \
+		shaders/metal.vert \
+		shaders/normals/normals.vert \
 		shaders/normals/normals.frag \
 		shaders/normals/normals.gsh \
 		shaders/normals/normalsArrow.gsh \
@@ -221,6 +223,7 @@ DIST          = shaders/normals/normals.vert \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/toolchain.prf \
@@ -428,6 +431,7 @@ Makefile: final.pro ../../../../Qt/5.14.2/clang_64/mkspecs/macx-clang/qmake.conf
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/toolchain.prf \
@@ -612,6 +616,7 @@ Makefile: final.pro ../../../../Qt/5.14.2/clang_64/mkspecs/macx-clang/qmake.conf
 ../../../../Qt/5.14.2/clang_64/mkspecs/features/qt_config.prf:
 ../../../../Qt/5.14.2/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../../Qt/5.14.2/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt/5.14.2/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt/5.14.2/clang_64/mkspecs/features/mac/sdk.prf:
 ../../../../Qt/5.14.2/clang_64/mkspecs/features/toolchain.prf:
@@ -690,6 +695,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r final.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
