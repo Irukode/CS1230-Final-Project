@@ -54,6 +54,7 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ui/mainwindow.cpp \
 		camera/OrbitingCamera.cpp \
+		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
 		ui/Settings.cpp \
@@ -63,6 +64,7 @@ SOURCES       = ui/mainwindow.cpp \
 		moc_view.cpp
 OBJECTS       = mainwindow.o \
 		OrbitingCamera.o \
+		resourceloader.o \
 		main.o \
 		glew.o \
 		Settings.o \
@@ -79,6 +81,8 @@ DIST          = shaders/metal.frag \
 		shaders/normals/normalsArrow.gsh \
 		shaders/normals/normalsArrow.frag \
 		shaders/normals/normalsArrow.vert \
+		shaders/skybox.frag \
+		shaders/skybox.vert \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.14.2/clang_64/mkspecs/qdevice.pri \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/device_config.prf \
@@ -259,12 +263,14 @@ DIST          = shaders/metal.frag \
 		final.pro ui/mainwindow.h \
 		camera/Camera.h \
 		camera/OrbitingCamera.h \
+		lib/resourceloader.h \
 		ui/Settings.h \
 		ui_mainwindow.h \
 		glew-1.10.0/include/GL/glew.h \
 		ui/view.h \
 		ui/viewformat.h ui/mainwindow.cpp \
 		camera/OrbitingCamera.cpp \
+		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
 		ui/Settings.cpp \
@@ -692,8 +698,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
@@ -887,6 +893,14 @@ OrbitingCamera.o: camera/OrbitingCamera.cpp glm/gtc/matrix_transform.hpp \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OrbitingCamera.o camera/OrbitingCamera.cpp
+
+resourceloader.o: lib/resourceloader.cpp lib/resourceloader.h \
+		glew-1.10.0/include/GL/glew.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFile \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfile.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o resourceloader.o lib/resourceloader.cpp
 
 main.o: main.cpp ../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \

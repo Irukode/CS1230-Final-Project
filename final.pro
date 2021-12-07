@@ -23,6 +23,7 @@ win32 {
 
 SOURCES += ui/mainwindow.cpp \
     camera/OrbitingCamera.cpp \
+    lib/resourceloader.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
     ui/Settings.cpp \
@@ -32,6 +33,7 @@ SOURCES += ui/mainwindow.cpp \
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
     camera/OrbitingCamera.h \
+    lib/resourceloader.h \
     ui/Settings.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
@@ -77,4 +79,6 @@ DISTFILES += \
     shaders/normals/normals.gsh \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
-    shaders/normals/normalsArrow.vert
+    shaders/normals/normalsArrow.vert \
+    shaders/skybox.frag \
+    shaders/skybox.vert

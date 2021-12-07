@@ -1,4 +1,5 @@
 #version 330 core
+//probably wont need, used in raytracing i think
 
 in vec3 vertex;                 // The position of the vertex, in camera space
 in vec3 vertexToLight;          // Vector from the vertex to the light

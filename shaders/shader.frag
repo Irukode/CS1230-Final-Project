@@ -1,5 +1,6 @@
 #version 400 core
 
+//Do Raytracing in here
 in vec3 color;
 in vec2 texc;
 out vec4 fragColor;
