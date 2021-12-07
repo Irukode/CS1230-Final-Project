@@ -22,12 +22,19 @@ win32 {
 }
 
 SOURCES += ui/mainwindow.cpp \
+    camera/CamtransCamera.cpp \
+    camera/OrbitingCamera.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
+    ui/Settings.cpp \
     ui/view.cpp \
     ui/viewformat.cpp
 
 HEADERS += ui/mainwindow.h \
+    camera/Camera.h \
+    camera/CamtransCamera.h \
+    camera/OrbitingCamera.h \
+    ui/Settings.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
     ui/view.h \
