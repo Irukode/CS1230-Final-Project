@@ -24,7 +24,7 @@ t intersectSphere(vec4 d, vec4 eye)
         float tPlus = (-b + qrt(disc))/ (2*a);
         float tMinus = (-b - glm::sqrt(disc))/ (2*a);
         if(tPlus<0 && tMinus < 0){
-            mt.minT = -1.f
+            mt.minT = -1.f;
             return mt;
         }
         else if (tPlus<0 && tMinus >= 0){
@@ -38,7 +38,7 @@ t intersectSphere(vec4 d, vec4 eye)
             return mt;
         }
         else{
-            mt.minT = min(tPlus, tMinus);;
+            mt.minT = min(tPlus, tMinus);
             mt.normal = normalize(eye+mt.minT*d);
             return mt;
         }

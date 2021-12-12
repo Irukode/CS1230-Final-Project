@@ -23,6 +23,18 @@ win32 {
 
 SOURCES += ui/mainwindow.cpp \
     camera/OrbitingCamera.cpp \
+    gl/GLDebug.cpp \
+    gl/datatype/FBO.cpp \
+    gl/datatype/IBO.cpp \
+    gl/datatype/VAO.cpp \
+    gl/datatype/VBO.cpp \
+    gl/datatype/VBOAttribMarker.cpp \
+    gl/textures/DepthBuffer.cpp \
+    gl/textures/RenderBuffer.cpp \
+    gl/textures/Texture.cpp \
+    gl/textures/Texture2D.cpp \
+    gl/textures/TextureParameters.cpp \
+    gl/textures/TextureParametersBuilder.cpp \
     lib/resourceloader.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
@@ -33,6 +45,19 @@ SOURCES += ui/mainwindow.cpp \
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
     camera/OrbitingCamera.h \
+    gl/GLDebug.h \
+    gl/datatype/FBO.h \
+    gl/datatype/IBO.h \
+    gl/datatype/VAO.h \
+    gl/datatype/VBO.h \
+    gl/datatype/VBOAttribMarker.h \
+    gl/shaders/ShaderAttribLocations.h \
+    gl/textures/DepthBuffer.h \
+    gl/textures/RenderBuffer.h \
+    gl/textures/Texture.h \
+    gl/textures/Texture2D.h \
+    gl/textures/TextureParameters.h \
+    gl/textures/TextureParametersBuilder.h \
     lib/resourceloader.h \
     ui/Settings.h \
     ui_mainwindow.h \

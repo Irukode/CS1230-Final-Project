@@ -54,6 +54,18 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ui/mainwindow.cpp \
 		camera/OrbitingCamera.cpp \
+		gl/GLDebug.cpp \
+		gl/datatype/FBO.cpp \
+		gl/datatype/IBO.cpp \
+		gl/datatype/VAO.cpp \
+		gl/datatype/VBO.cpp \
+		gl/datatype/VBOAttribMarker.cpp \
+		gl/textures/DepthBuffer.cpp \
+		gl/textures/RenderBuffer.cpp \
+		gl/textures/Texture.cpp \
+		gl/textures/Texture2D.cpp \
+		gl/textures/TextureParameters.cpp \
+		gl/textures/TextureParametersBuilder.cpp \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
@@ -64,6 +76,18 @@ SOURCES       = ui/mainwindow.cpp \
 		moc_view.cpp
 OBJECTS       = mainwindow.o \
 		OrbitingCamera.o \
+		GLDebug.o \
+		FBO.o \
+		IBO.o \
+		VAO.o \
+		VBO.o \
+		VBOAttribMarker.o \
+		DepthBuffer.o \
+		RenderBuffer.o \
+		Texture.o \
+		Texture2D.o \
+		TextureParameters.o \
+		TextureParametersBuilder.o \
 		resourceloader.o \
 		main.o \
 		glew.o \
@@ -263,6 +287,19 @@ DIST          = shaders/metal.frag \
 		final.pro ui/mainwindow.h \
 		camera/Camera.h \
 		camera/OrbitingCamera.h \
+		gl/GLDebug.h \
+		gl/datatype/FBO.h \
+		gl/datatype/IBO.h \
+		gl/datatype/VAO.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
+		gl/shaders/ShaderAttribLocations.h \
+		gl/textures/DepthBuffer.h \
+		gl/textures/RenderBuffer.h \
+		gl/textures/Texture.h \
+		gl/textures/Texture2D.h \
+		gl/textures/TextureParameters.h \
+		gl/textures/TextureParametersBuilder.h \
 		lib/resourceloader.h \
 		ui/Settings.h \
 		ui_mainwindow.h \
@@ -270,6 +307,18 @@ DIST          = shaders/metal.frag \
 		ui/view.h \
 		ui/viewformat.h ui/mainwindow.cpp \
 		camera/OrbitingCamera.cpp \
+		gl/GLDebug.cpp \
+		gl/datatype/FBO.cpp \
+		gl/datatype/IBO.cpp \
+		gl/datatype/VAO.cpp \
+		gl/datatype/VBO.cpp \
+		gl/datatype/VBOAttribMarker.cpp \
+		gl/textures/DepthBuffer.cpp \
+		gl/textures/RenderBuffer.cpp \
+		gl/textures/Texture.cpp \
+		gl/textures/Texture2D.cpp \
+		gl/textures/TextureParameters.cpp \
+		gl/textures/TextureParametersBuilder.cpp \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
@@ -698,8 +747,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h gl/GLDebug.h gl/datatype/FBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/VBO.h gl/datatype/VBOAttribMarker.h gl/shaders/ShaderAttribLocations.h gl/textures/DepthBuffer.h gl/textures/RenderBuffer.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp gl/GLDebug.cpp gl/datatype/FBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/VBO.cpp gl/datatype/VBOAttribMarker.cpp gl/textures/DepthBuffer.cpp gl/textures/RenderBuffer.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
@@ -893,6 +942,71 @@ OrbitingCamera.o: camera/OrbitingCamera.cpp glm/gtc/matrix_transform.hpp \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OrbitingCamera.o camera/OrbitingCamera.cpp
+
+GLDebug.o: gl/GLDebug.cpp gl/GLDebug.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o GLDebug.o gl/GLDebug.cpp
+
+FBO.o: gl/datatype/FBO.cpp gl/datatype/FBO.h \
+		gl/textures/TextureParameters.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/GLDebug.h \
+		gl/textures/RenderBuffer.h \
+		gl/textures/DepthBuffer.h \
+		gl/textures/Texture2D.h \
+		gl/textures/Texture.h \
+		gl/textures/TextureParametersBuilder.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o FBO.o gl/datatype/FBO.cpp
+
+IBO.o: gl/datatype/IBO.cpp gl/datatype/IBO.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o IBO.o gl/datatype/IBO.cpp
+
+VAO.o: gl/datatype/VAO.cpp gl/datatype/VAO.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/datatype/VBO.h \
+		gl/datatype/IBO.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o VAO.o gl/datatype/VAO.cpp
+
+VBO.o: gl/datatype/VBO.cpp gl/datatype/VBO.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/datatype/VBOAttribMarker.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o VBO.o gl/datatype/VBO.cpp
+
+VBOAttribMarker.o: gl/datatype/VBOAttribMarker.cpp gl/datatype/VBOAttribMarker.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o VBOAttribMarker.o gl/datatype/VBOAttribMarker.cpp
+
+DepthBuffer.o: gl/textures/DepthBuffer.cpp gl/textures/DepthBuffer.h \
+		gl/textures/RenderBuffer.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o DepthBuffer.o gl/textures/DepthBuffer.cpp
+
+RenderBuffer.o: gl/textures/RenderBuffer.cpp gl/textures/RenderBuffer.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o RenderBuffer.o gl/textures/RenderBuffer.cpp
+
+Texture.o: gl/textures/Texture.cpp gl/textures/Texture.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/GLDebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Texture.o gl/textures/Texture.cpp
+
+Texture2D.o: gl/textures/Texture2D.cpp gl/textures/Texture2D.h \
+		gl/textures/Texture.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Texture2D.o gl/textures/Texture2D.cpp
+
+TextureParameters.o: gl/textures/TextureParameters.cpp gl/textures/TextureParameters.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/GLDebug.h \
+		gl/textures/Texture.h \
+		gl/textures/Texture2D.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TextureParameters.o gl/textures/TextureParameters.cpp
+
+TextureParametersBuilder.o: gl/textures/TextureParametersBuilder.cpp gl/textures/TextureParametersBuilder.h \
+		gl/textures/TextureParameters.h \
+		glew-1.10.0/include/GL/glew.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TextureParametersBuilder.o gl/textures/TextureParametersBuilder.cpp
 
 resourceloader.o: lib/resourceloader.cpp lib/resourceloader.h \
 		glew-1.10.0/include/GL/glew.h \
