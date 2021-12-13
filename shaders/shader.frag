@@ -84,6 +84,8 @@ void intersectSphere(vec4 d, vec4 eye, int i)
     }
 }
 
+//intersect cube
+
 vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, Material mat){
     vec4 color;
     Material material = mat;
