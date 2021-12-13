@@ -9,7 +9,7 @@
 #define SETTINGS_H
 
 #include <QObject>
-#include "RGBA.h"
+#include "lib/RGBA.h"
 
 // Enumeration values for the Brush types from which the user can choose in the GUI.
 enum BrushType {

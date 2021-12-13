@@ -1,6 +1,9 @@
 #ifndef FBO_H
 #define FBO_H
 
+#include <memory>
+#include <vector>
+
 #include "gl/textures/TextureParameters.h"
 
 namespace CS123 { namespace GL {

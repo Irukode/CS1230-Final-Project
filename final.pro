@@ -35,6 +35,7 @@ SOURCES += ui/mainwindow.cpp \
     gl/textures/Texture2D.cpp \
     gl/textures/TextureParameters.cpp \
     gl/textures/TextureParametersBuilder.cpp \
+    lib/RGBA.cpp \
     lib/resourceloader.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
@@ -58,6 +59,7 @@ HEADERS += ui/mainwindow.h \
     gl/textures/Texture2D.h \
     gl/textures/TextureParameters.h \
     gl/textures/TextureParametersBuilder.h \
+    lib/RGBA.h \
     lib/resourceloader.h \
     ui/Settings.h \
     ui_mainwindow.h \
