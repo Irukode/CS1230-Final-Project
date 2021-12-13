@@ -12,6 +12,12 @@ uniform mat4 worldSpace; //scale*view
 uniform vec4 eye; //view*vec4(0,0,0,1)
 uniform float width;
 uniform float height;
+uniform int numSpheres;
+uniform int numLights;
+
+//how to get an array of spheres and lights?
+uniform mat[numSpheres];
+uniform lights[numLights];
 
 //need numSpheres
 struct t{
@@ -19,11 +25,12 @@ struct t{
     vec4 normal;
 } mt[numSpheres];
 
-struct Material {
-    vec4 diffuseColor;
-    vec4 specularColor;
-    float shininess;
-};
+// probably gonna be in array
+//struct Material {
+//    vec4 diffuseColor;
+//    vec4 specularColor;
+//    float shininess;
+//};
 
 //struct Light {
 //};
@@ -31,7 +38,7 @@ struct Material {
 vec4 intersect(vec4 d, vec4 eye) {
     //need material
     int minTIndex = 0;
-    for (int i = 0; i < 0; i++){ // for each Sphere
+    for (int i = 0; i < numSpheres; i++){ // for each Sphere
         intersectSphere(d,eye, i); //might need to add transformation for object space
         if(i!=0 && mt[i].mT != -1.0f && mt[i].mT < mt[minTIndex].mT){
             minTIndex = i;
@@ -44,9 +51,8 @@ vec4 intersect(vec4 d, vec4 eye) {
     if(mt[minTIndex].mT != -1.f){
         intersectW = eye+mt[minTIndex].mT*d;
         //normalW = normalize(objectTransformation*mT.normal);
+        color = calculateLighting(intersectW, d, normalW, mat);//need to get material somehow
     }
-    vec4 color = calculateLighting(intersectW, d, normalW, mat);//need to get material somehow
-
 
     return color;
 }
@@ -58,8 +64,8 @@ void intersectSphere(vec4 d, vec4 eye, int i)
     float c = pow(eye.x, 2.0f) + pow(eye.y, 2.0f) + pow(eye.z, 2.0f) - 0.25f;
     float disc = pow(a,2.f) - (4*a*c);
     if(disc>=0){
-        float tPlus = (-b + qrt(disc))/ (2*a);
-        float tMinus = (-b - glm::sqrt(disc))/ (2*a);
+        float tPlus = (-b + sqrt(disc))/ (2*a);
+        float tMinus = (-b - sqrt(disc))/ (2*a);
         if(tPlus<0 && tMinus < 0){
             mt[i].mT = -1.f;
         }
@@ -136,7 +142,7 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, Material mat){
         //            }
         //        }
 
-        color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*glm::pow(refdot,material.shininess)));
+        color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*glm::pow(refdot,material.shininess));
     }
     color.x = clamp(color.x, 0.0f, 1.0f);
     color.y = clamp(color.y, 0.0f, 1.0f);
