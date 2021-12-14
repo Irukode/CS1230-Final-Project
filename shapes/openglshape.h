@@ -1,7 +1,10 @@
 #ifndef OPENGLSHAPE_H
 #define OPENGLSHAPE_H
 
+#include "GL/glew.h"
+
 #include <memory>
+#include <vector>
 
 #include "gl/datatype/VBO.h"
 #include "gl/datatype/VBOAttribMarker.h"

@@ -940,6 +940,96 @@ moc_view.cpp: ui/view.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		glm/gtx/transform.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtx/transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		cs123_lib/sphere.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
 		moc_predefs.h \
 		../../../../Qt/5.14.2/clang_64/bin/moc
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/moc $(DEFINES) --include /Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/moc_predefs.h -I/Users/michaelchung/Qt/5.14.2/clang_64/mkspecs/macx-clang -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glm -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/ui -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtGui.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtXml.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/michaelchung/Qt/5.14.2/clang_64/lib ui/view.h -o moc_view.cpp
@@ -959,7 +1049,97 @@ ui_mainwindow.h: ui/mainwindow.ui \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTime \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
-		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		glm/gtx/transform.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtx/transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		cs123_lib/sphere.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/uic ui/mainwindow.ui -o ui_mainwindow.h
 
 compiler_rez_source_make_all:
@@ -987,6 +1167,96 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		glm/gtx/transform.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtx/transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		cs123_lib/sphere.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
 		ui/Databinding.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
@@ -1194,8 +1464,8 @@ glew.o: glew-1.10.0/src/glew.c glew-1.10.0/include/GL/glew.h \
 	$(CC) -c $(CFLAGS) $(INCPATH) -o glew.o glew-1.10.0/src/glew.c
 
 openglshape.o: shapes/openglshape.cpp shapes/openglshape.h \
-		gl/datatype/VBO.h \
 		glew-1.10.0/include/GL/glew.h \
+		gl/datatype/VBO.h \
 		gl/datatype/VBOAttribMarker.h \
 		gl/datatype/VAO.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglshape.o shapes/openglshape.cpp
@@ -1240,12 +1510,108 @@ view.o: ui/view.cpp ui/view.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		glm/gtx/transform.hpp \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl \
+		glm/gtx/transform.inl \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		cs123_lib/sphere.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
 		ui/viewformat.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLFormat \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QKeyEvent \
-		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qevent.h
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		gl/shaders/ShaderAttribLocations.h \
+		lib/resourceloader.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFile \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfile.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o view.o ui/view.cpp
 
 viewformat.o: ui/viewformat.cpp ui/viewformat.h \

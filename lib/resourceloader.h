@@ -11,8 +11,11 @@
 
   @author: Justin Ardini (jardini)
    **/
-namespace ResourceLoader
-{
+class ResourceLoader {
+public:
+    ResourceLoader();
+    static GLuint createShaderProgram(const char * vertex_file_path,const char * fragment_file_path);
+    static void initializeGlew();
     // Returns the skybox ID
     GLuint loadSkybox();
 
@@ -20,11 +23,12 @@ namespace ResourceLoader
     QGLShaderProgram * newVertShaderProgram(const QGLContext *context, QString vertShader);
     QGLShaderProgram * newFragShaderProgram(const QGLContext *context, QString fragShader);
     QGLShaderProgram * newShaderProgram(const QGLContext *context, QString vertShader, QString fragShader, QString *errors = 0);
-
     // Returns the cubeMap ID
     GLuint loadCubeMap(QList<QFile *> files);
 
-    void initializeGlew();
-}
+
+private:
+    static GLuint createShader(GLenum shaderType, const char *filepath);
+};
 
 #endif // RESOURCELOADER_H
