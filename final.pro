@@ -39,6 +39,7 @@ SOURCES += ui/mainwindow.cpp \
     lib/resourceloader.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
+    ui/Databinding.cpp \
     ui/Settings.cpp \
     ui/view.cpp \
     ui/viewformat.cpp
@@ -61,6 +62,7 @@ HEADERS += ui/mainwindow.h \
     gl/textures/TextureParametersBuilder.h \
     lib/RGBA.h \
     lib/resourceloader.h \
+    ui/Databinding.h \
     ui/Settings.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
