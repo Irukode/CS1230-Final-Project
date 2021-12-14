@@ -31,7 +31,6 @@ SOURCES += ui/mainwindow.cpp \
     gl/datatype/VAO.cpp \
     gl/datatype/VBO.cpp \
     gl/datatype/VBOAttribMarker.cpp \
-    gl/glwidget.cpp \
     gl/textures/DepthBuffer.cpp \
     gl/textures/RenderBuffer.cpp \
     gl/textures/Texture.cpp \
@@ -59,7 +58,6 @@ HEADERS += ui/mainwindow.h \
     gl/datatype/VAO.h \
     gl/datatype/VBO.h \
     gl/datatype/VBOAttribMarker.h \
-    gl/glwidget.h \
     gl/shaders/ShaderAttribLocations.h \
     gl/textures/DepthBuffer.h \
     gl/textures/RenderBuffer.h \
