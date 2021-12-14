@@ -24,7 +24,6 @@ win32 {
 SOURCES += ui/mainwindow.cpp \
     camera/OrbitingCamera.cpp \
     cs123_lib/errorchecker.cpp \
-    cs123_lib/resourceloader.cpp \
     gl/GLDebug.cpp \
     gl/datatype/FBO.cpp \
     gl/datatype/IBO.cpp \
@@ -41,16 +40,18 @@ SOURCES += ui/mainwindow.cpp \
     lib/resourceloader.cpp \
     main.cpp \
     glew-1.10.0/src/glew.c \
+    shapes/openglshape.cpp \
     ui/Databinding.cpp \
     ui/Settings.cpp \
     ui/view.cpp \
-    ui/viewformat.cpp
+    ui/viewformat.cpp \
+    uniforms/uniformvariable.cpp \
+    uniforms/varsfile.cpp
 
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
     camera/OrbitingCamera.h \
     cs123_lib/errorchecker.h \
-    cs123_lib/resourceloader.h \
     cs123_lib/sphere.h \
     gl/GLDebug.h \
     gl/datatype/FBO.h \
@@ -67,12 +68,16 @@ HEADERS += ui/mainwindow.h \
     gl/textures/TextureParametersBuilder.h \
     lib/RGBA.h \
     lib/resourceloader.h \
+    shapes/cube.h \
+    shapes/openglshape.h \
     ui/Databinding.h \
     ui/Settings.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
     ui/view.h \
-    ui/viewformat.h
+    ui/viewformat.h \
+    uniforms/uniformvariable.h \
+    uniforms/varsfile.h
 
 FORMS += ui/mainwindow.ui
 INCLUDEPATH += glm ui glew-1.10.0/include
