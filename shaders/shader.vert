@@ -14,5 +14,4 @@ void main() {
     //gl_Position = model * gl_Position;
     // TODO: Transform the position using all three matrix uniforms. (Task 4)
     gl_Position = perspective * view * model * gl_Position;
-
 }

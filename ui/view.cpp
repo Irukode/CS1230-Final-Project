@@ -35,15 +35,16 @@ void View::initializeGL() {
     // All OpenGL initialization *MUST* be done during or after this
     // method. Before this method is called, there is no active OpenGL
     // context and all OpenGL calls have no effect.
+    ResourceLoader::initializeGlew();
 
     //initialize glew
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        /* Problem: glewInit failed, something is seriously wrong. */
-        std::cerr << "Something is very wrong, glew initialization failed." << std::endl;
-    }
-    std::cout << "Using GLEW " <<  glewGetString( GLEW_VERSION ) << std::endl;
+//    glewExperimental = GL_TRUE;
+//    GLenum err = glewInit();
+//    if (GLEW_OK != err) {
+//        /* Problem: glewInit failed, something is seriously wrong. */
+//        std::cerr << "Something is very wrong, glew initialization failed." << std::endl;
+//    }
+//    std::cout << "Using GLEW " <<  glewGetString( GLEW_VERSION ) << std::endl;
 
     // Start a timer that will try to get 60 frames per second (the actual
     // frame rate depends on the operating system and other running programs)
@@ -54,7 +55,7 @@ void View::initializeGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Creates the shader program that will be used for drawing.
-    m_program = ResourceLoader::createShaderProgram(":/shaders/shader.vert", ":/shaders/shader.frag");
+    m_program = ResourceLoader::createShaderProgram(":shaders/default.vert", ":shaders/default.frag");
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
@@ -67,6 +68,8 @@ void View::initializeGL() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+
+    std::cout << "Line 72" << std::endl;
 }
 
 void View::paintGL() {

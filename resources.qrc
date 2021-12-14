@@ -1,3 +1,10 @@
 <RCC>
-    <qresource prefix="/shaders"/>
+    <qresource prefix="/shaders">
+        <file>shaders/metal.frag</file>
+        <file>shaders/metal.vert</file>
+        <file alias="default.frag">shaders/shader.frag</file>
+        <file alias="default.vert">shaders/shader.vert</file>
+        <file>shaders/skybox.frag</file>
+        <file>shaders/skybox.vert</file>
+    </qresource>
 </RCC>
