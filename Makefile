@@ -117,6 +117,8 @@ DIST          = shaders/metal.frag \
 		shaders/normals/normalsArrow.gsh \
 		shaders/normals/normalsArrow.frag \
 		shaders/normals/normalsArrow.vert \
+		shaders/shader.frag \
+		shaders/shader.vert \
 		shaders/skybox.frag \
 		shaders/skybox.vert \
 		../../../../Qt/5.14.2/clang_64/mkspecs/features/spec_pre.prf \
@@ -802,9 +804,7 @@ compiler_rcc_make_all: qrc_resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_resources.cpp
 qrc_resources.cpp: resources.qrc \
-		../../../../Qt/5.14.2/clang_64/bin/rcc \
-		shaders/shader.frag \
-		shaders/shader.vert
+		../../../../Qt/5.14.2/clang_64/bin/rcc
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/rcc -name resources resources.qrc -o qrc_resources.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h

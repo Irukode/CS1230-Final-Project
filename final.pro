@@ -82,8 +82,7 @@ DEPENDPATH += glm ui glew-1.10.0/include
 DEFINES += _USE_MATH_DEFINES
 DEFINES += TIXML_USE_STL
 DEFINES += GLM_SWIZZLE GLM_FORCE_RADIANS
-OTHER_FILES += shaders/shader.frag \
-    shaders/shader.vert
+OTHER_FILES +=
 
 # Don't add the -pg flag unless you know what you are doing. It makes QThreadPool freeze on Mac OS X
 QMAKE_CXXFLAGS_RELEASE -= -O2
@@ -115,5 +114,7 @@ DISTFILES += \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
     shaders/normals/normalsArrow.vert \
+    shaders/shader.frag \
+    shaders/shader.vert \
     shaders/skybox.frag \
     shaders/skybox.vert
