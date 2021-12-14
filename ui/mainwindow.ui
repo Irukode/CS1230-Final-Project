@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1251</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="View" name="view" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>800</width>
-      <height>600</height>
+      <x>290</x>
+      <y>10</y>
+      <width>951</width>
+      <height>751</height>
      </rect>
     </property>
    </widget>
@@ -188,16 +188,6 @@
       <string>Clear</string>
      </property>
     </widget>
-   </widget>
-   <widget class="QWidget" name="Canvas" native="true">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>20</y>
-      <width>501</width>
-      <height>501</height>
-     </rect>
-    </property>
    </widget>
   </widget>
  </widget>
