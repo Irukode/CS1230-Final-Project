@@ -5,6 +5,8 @@
 #include "Settings.h"
 #include <QGLFormat>
 
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -43,4 +45,20 @@ void MainWindow::dataBind() {
 
 void MainWindow::settingsChanged() {
     // Left empty for now, change when needed for updating new sphere data
+}
+
+void MainWindow::on_addSphereButton_clicked() {
+    std::cout << "Sphere button clicked" << std::endl;
+}
+
+void MainWindow::on_clearButton_clicked() {
+    std::cout << "Clear button clicked" << std::endl;
+}
+
+void MainWindow::on_shakeButton_clicked() {
+    std::cout << "Shake button clicked" << std::endl;
+}
+
+void MainWindow::on_settleButton_clicked() {
+    std::cout << "Settle button clicked" << std::endl;
 }

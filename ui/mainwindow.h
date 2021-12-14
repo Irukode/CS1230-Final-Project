@@ -38,6 +38,15 @@ private:
     QList<DataBinding*> m_bindings;
     QList<QButtonGroup*> m_buttonGroups;
 
+private slots:
+    void on_addSphereButton_clicked();
+
+    void on_clearButton_clicked();
+
+    void on_shakeButton_clicked();
+
+    void on_settleButton_clicked();
+
 public slots:
     // Used internally to keep data bindings and the user interface in sync.
     void settingsChanged();

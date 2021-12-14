@@ -240,7 +240,7 @@
     <widget class="QPushButton" name="settleButton">
      <property name="geometry">
       <rect>
-       <x>9</x>
+       <x>10</x>
        <y>220</y>
        <width>111</width>
        <height>31</height>

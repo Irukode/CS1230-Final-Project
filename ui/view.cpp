@@ -69,7 +69,6 @@ void View::initializeGL() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    std::cout << "Line 72" << std::endl;
 }
 
 void View::paintGL() {
