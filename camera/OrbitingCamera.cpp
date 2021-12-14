@@ -20,7 +20,20 @@
 
 #include "OrbitingCamera.h"
 #include "Settings.h"
+#include "lib/common.h"
 
+OrbitingCamera::OrbitingCamera() : Camera()
+{
+    m_aspectRatio = 1;
+    m_angleX = m_angleY = 0;
+    m_zoomZ = -5;
+    updateMatrices();
+}
+
+OrbitingCamera::~OrbitingCamera()
+{
+
+}
 
 void OrbitingCamera::setAspectRatio(float aspectRatio) {
     m_aspectRatio = aspectRatio;
@@ -41,6 +54,11 @@ glm::mat4x4 OrbitingCamera::getScaleMatrix() const {
 
 glm::mat4x4 OrbitingCamera::getPerspectiveMatrix() const {
     throw 0; // not implemented
+}
+
+glm::mat4 OrbitingCamera::getModelviewMatrix() const
+{
+    return m_modelviewMatrix;
 }
 
 void OrbitingCamera::mouseDown(int x, int y) {
@@ -89,4 +107,35 @@ void OrbitingCamera::updateViewMatrix() {
             glm::translate(glm::vec3(0.f, 0.f, m_zoomZ)) *
             glm::rotate(glm::radians(m_angleY), glm::vec3(0.f, 1.f, 0.f)) *
             glm::rotate(glm::radians(m_angleX), glm::vec3(1.f, 0.f, 0.f));
+}
+
+void OrbitingCamera::updateModelviewMatrix()
+{
+    m_modelviewMatrix = glm::mat4();
+    // Move the object forward by m_zoomZ units before we rotate, so it will rotate about a point in front of us
+    m_modelviewMatrix = glm::translate(m_modelviewMatrix, glm::vec3(0, 0, m_zoomZ));
+
+    // Now rotate the object, pivoting it about the new origin in front of us
+    m_modelviewMatrix = glm::rotate(m_modelviewMatrix, degreesToRadians(180), glm::vec3(1,0,0));
+    m_modelviewMatrix = glm::rotate(m_modelviewMatrix, degreesToRadians(m_angleX), glm::vec3(1, 0, 0));
+    m_modelviewMatrix = glm::rotate(m_modelviewMatrix, degreesToRadians(m_angleY), glm::vec3(0, 1, 0));
+
+    emit viewChanged(m_modelviewMatrix);
+    emit modelviewProjectionChanged(m_projectionMatrix * m_modelviewMatrix);
+
+}
+
+//glm::vec4 OrbitingCamera::getPosition() const {
+//    return glm::vec4(0, 0, 0, 1);
+//}
+
+void OrbitingCamera::updateMats()
+{
+    emit viewChanged(m_modelviewMatrix);
+    emit projectionChanged(m_projectionMatrix);
+    emit modelviewProjectionChanged(m_projectionMatrix * m_modelviewMatrix);
+}
+
+glm::mat4 OrbitingCamera::getViewingMatrix() const {
+    return glm::mat4();
 }

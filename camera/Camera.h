@@ -1,13 +1,19 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include <glm.hpp>
+#include <QObject>
 
 /**
  * @class Camera
  *
  * An abstract class representing a virtual camera with an optional mouse interaction.
  */
-class Camera {
+class Camera : public QObject{
+    Q_OBJECT
+signals:
+    void viewChanged(const glm::mat4 &modelview);
+    void projectionChanged(const glm::mat4 &projection);
+    void modelviewProjectionChanged(const glm::mat4 &modelviewProjection);
 public:
     // Called when the window size changes
     virtual void setAspectRatio(float) = 0;
@@ -29,6 +35,14 @@ public:
     // settings.
     virtual glm::mat4x4 getPerspectiveMatrix() const = 0;
 
+    //! Return the modelview matrix for the current camera settings.
+    virtual glm::mat4 getModelviewMatrix() const = 0;
+
+    virtual glm::mat4 getViewingMatrix() const = 0;
+
+    //virtual glm::vec4 getPosition() const = 0;
+
+    virtual void updateMats() = 0;
     //
     // The following functions are called for mouse events on the 3D canvas tab.
     //

@@ -70,10 +70,15 @@ SOURCES       = ui/mainwindow.cpp \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
+		shapes/openglshape.cpp \
 		ui/Settings.cpp \
 		ui/view.cpp \
-		ui/viewformat.cpp qrc_resources.cpp \
+		ui/viewformat.cpp \
+		uniforms/uniformvariable.cpp \
+		uniforms/varsfile.cpp qrc_resources.cpp \
 		moc_mainwindow.cpp \
+		moc_Camera.cpp \
+		moc_OrbitingCamera.cpp \
 		moc_view.cpp
 OBJECTS       = mainwindow.o \
 		OrbitingCamera.o \
@@ -93,11 +98,16 @@ OBJECTS       = mainwindow.o \
 		resourceloader.o \
 		main.o \
 		glew.o \
+		openglshape.o \
 		Settings.o \
 		view.o \
 		viewformat.o \
+		uniformvariable.o \
+		varsfile.o \
 		qrc_resources.o \
 		moc_mainwindow.o \
+		moc_Camera.o \
+		moc_OrbitingCamera.o \
 		moc_view.o
 DIST          = shaders/metal.frag \
 		shaders/metal.vert \
@@ -303,12 +313,17 @@ DIST          = shaders/metal.frag \
 		gl/textures/TextureParameters.h \
 		gl/textures/TextureParametersBuilder.h \
 		lib/RGBA.h \
+		lib/common.h \
 		lib/resourceloader.h \
+		shapes/cube.h \
+		shapes/openglshape.h \
 		ui/Settings.h \
 		ui_mainwindow.h \
 		glew-1.10.0/include/GL/glew.h \
 		ui/view.h \
-		ui/viewformat.h ui/mainwindow.cpp \
+		ui/viewformat.h \
+		uniforms/uniformvariable.h \
+		uniforms/varsfile.h ui/mainwindow.cpp \
 		camera/OrbitingCamera.cpp \
 		gl/GLDebug.cpp \
 		gl/datatype/FBO.cpp \
@@ -326,9 +341,12 @@ DIST          = shaders/metal.frag \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
+		shapes/openglshape.cpp \
 		ui/Settings.cpp \
 		ui/view.cpp \
-		ui/viewformat.cpp
+		ui/viewformat.cpp \
+		uniforms/uniformvariable.cpp \
+		uniforms/varsfile.cpp
 QMAKE_TARGET  = final
 DESTDIR       = 
 TARGET        = final.app/Contents/MacOS/final
@@ -751,8 +769,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h gl/GLDebug.h gl/datatype/FBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/VBO.h gl/datatype/VBOAttribMarker.h gl/shaders/ShaderAttribLocations.h gl/textures/DepthBuffer.h gl/textures/RenderBuffer.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h lib/RGBA.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp gl/GLDebug.cpp gl/datatype/FBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/VBO.cpp gl/datatype/VBOAttribMarker.cpp gl/textures/DepthBuffer.cpp gl/textures/RenderBuffer.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp lib/RGBA.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h gl/GLDebug.h gl/datatype/FBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/VBO.h gl/datatype/VBOAttribMarker.h gl/shaders/ShaderAttribLocations.h gl/textures/DepthBuffer.h gl/textures/RenderBuffer.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h lib/RGBA.h lib/common.h lib/resourceloader.h shapes/cube.h shapes/openglshape.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h uniforms/uniformvariable.h uniforms/varsfile.h $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp gl/GLDebug.cpp gl/datatype/FBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/VBO.cpp gl/datatype/VBOAttribMarker.cpp gl/textures/DepthBuffer.cpp gl/textures/RenderBuffer.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp lib/RGBA.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c shapes/openglshape.cpp ui/Settings.cpp ui/view.cpp ui/viewformat.cpp uniforms/uniformvariable.cpp uniforms/varsfile.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
@@ -795,15 +813,182 @@ compiler_moc_predefs_clean:
 moc_predefs.h: ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -std=c++14 -g -g -std=gnu++1y $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk -mmacosx-version-min=10.13 -Wextra -Waddress -Wchar-subscripts -Wformat -Wmain -Wmissing-braces -Wparentheses -Wreorder -Wreturn-type -Wsequence-point -Wsign-compare -Wstrict-overflow=1 -Wswitch -Wtrigraphs -Wuninitialized -Wunused-label -Wunused-variable -Wvolatile-register-var -Wno-extra -dM -E -o moc_predefs.h ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_Camera.cpp moc_OrbitingCamera.cpp moc_view.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_view.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_Camera.cpp moc_OrbitingCamera.cpp moc_view.cpp
 moc_mainwindow.cpp: ui/mainwindow.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		moc_predefs.h \
 		../../../../Qt/5.14.2/clang_64/bin/moc
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/moc $(DEFINES) --include /Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/moc_predefs.h -I/Users/michaelchung/Qt/5.14.2/clang_64/mkspecs/macx-clang -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glm -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/ui -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtGui.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtXml.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/michaelchung/Qt/5.14.2/clang_64/lib ui/mainwindow.h -o moc_mainwindow.cpp
+
+moc_Camera.cpp: camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		moc_predefs.h \
+		../../../../Qt/5.14.2/clang_64/bin/moc
+	/Users/michaelchung/Qt/5.14.2/clang_64/bin/moc $(DEFINES) --include /Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/moc_predefs.h -I/Users/michaelchung/Qt/5.14.2/clang_64/mkspecs/macx-clang -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glm -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/ui -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtGui.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtXml.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/michaelchung/Qt/5.14.2/clang_64/lib camera/Camera.h -o moc_Camera.cpp
+
+moc_OrbitingCamera.cpp: camera/OrbitingCamera.h \
+		camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		moc_predefs.h \
+		../../../../Qt/5.14.2/clang_64/bin/moc
+	/Users/michaelchung/Qt/5.14.2/clang_64/bin/moc $(DEFINES) --include /Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/moc_predefs.h -I/Users/michaelchung/Qt/5.14.2/clang_64/mkspecs/macx-clang -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glm -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/ui -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtGui.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtXml.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/michaelchung/Qt/5.14.2/clang_64/lib camera/OrbitingCamera.h -o moc_OrbitingCamera.cpp
 
 moc_view.cpp: ui/view.h \
 		glew-1.10.0/include/GL/glew.h \
@@ -812,6 +997,94 @@ moc_view.cpp: ui/view.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
+		camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		uniforms/uniformvariable.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h \
 		moc_predefs.h \
 		../../../../Qt/5.14.2/clang_64/bin/moc
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/moc $(DEFINES) --include /Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/moc_predefs.h -I/Users/michaelchung/Qt/5.14.2/clang_64/mkspecs/macx-clang -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glm -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/ui -I/Users/michaelchung/Desktop/BrownCS/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtGui.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtXml.framework/Headers -I/Users/michaelchung/Qt/5.14.2/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/michaelchung/Qt/5.14.2/clang_64/lib ui/view.h -o moc_view.cpp
@@ -831,7 +1104,95 @@ ui_mainwindow.h: ui/mainwindow.ui \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTime \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
-		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
+		camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		uniforms/uniformvariable.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h
 	/Users/michaelchung/Qt/5.14.2/clang_64/bin/uic ui/mainwindow.ui -o ui_mainwindow.h
 
 compiler_rez_source_make_all:
@@ -857,6 +1218,94 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
+		camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		uniforms/uniformvariable.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLFormat
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ui/mainwindow.cpp
 
@@ -942,10 +1391,11 @@ OrbitingCamera.o: camera/OrbitingCamera.cpp glm/gtc/matrix_transform.hpp \
 		glm/gtx/transform.inl \
 		camera/OrbitingCamera.h \
 		camera/Camera.h \
-		ui/Settings.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
-		lib/RGBA.h
+		ui/Settings.h \
+		lib/RGBA.h \
+		lib/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OrbitingCamera.o camera/OrbitingCamera.cpp
 
 GLDebug.o: gl/GLDebug.cpp gl/GLDebug.h \
@@ -1036,6 +1486,13 @@ glew.o: glew-1.10.0/src/glew.c glew-1.10.0/include/GL/glew.h \
 		glew-1.10.0/include/GL/glxew.h
 	$(CC) -c $(CFLAGS) $(INCPATH) -o glew.o glew-1.10.0/src/glew.c
 
+openglshape.o: shapes/openglshape.cpp shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		glew-1.10.0/include/GL/glew.h \
+		gl/datatype/VBOAttribMarker.h \
+		gl/datatype/VAO.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o openglshape.o shapes/openglshape.cpp
+
 Settings.o: ui/Settings.cpp ui/Settings.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
@@ -1053,12 +1510,120 @@ view.o: ui/view.cpp ui/view.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTimer \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qtimer.h \
+		shapes/openglshape.h \
+		gl/datatype/VBO.h \
+		gl/datatype/VBOAttribMarker.h \
+		camera/Camera.h \
+		glm/glm.hpp \
+		glm/detail/_fixes.hpp \
+		glm/fwd.hpp \
+		glm/detail/type_int.hpp \
+		glm/detail/setup.hpp \
+		glm/detail/type_float.hpp \
+		glm/detail/type_vec.hpp \
+		glm/detail/precision.hpp \
+		glm/detail/type_mat.hpp \
+		glm/vec2.hpp \
+		glm/detail/type_vec2.hpp \
+		glm/detail/_swizzle.hpp \
+		glm/detail/_swizzle_func.hpp \
+		glm/detail/type_vec2.inl \
+		glm/vec3.hpp \
+		glm/detail/type_vec3.hpp \
+		glm/detail/type_vec3.inl \
+		glm/vec4.hpp \
+		glm/detail/type_vec4.hpp \
+		glm/detail/type_vec4.inl \
+		glm/mat2x2.hpp \
+		glm/detail/type_mat2x2.hpp \
+		glm/detail/type_mat2x2.inl \
+		glm/mat2x3.hpp \
+		glm/detail/type_mat2x3.hpp \
+		glm/detail/type_mat2x3.inl \
+		glm/mat2x4.hpp \
+		glm/detail/type_mat2x4.hpp \
+		glm/detail/type_mat2x4.inl \
+		glm/mat3x2.hpp \
+		glm/detail/type_mat3x2.hpp \
+		glm/detail/type_mat3x2.inl \
+		glm/mat3x3.hpp \
+		glm/detail/type_mat3x3.hpp \
+		glm/detail/type_mat3x3.inl \
+		glm/mat3x4.hpp \
+		glm/detail/type_mat3x4.hpp \
+		glm/detail/type_mat3x4.inl \
+		glm/mat4x2.hpp \
+		glm/detail/type_mat4x2.hpp \
+		glm/detail/type_mat4x2.inl \
+		glm/mat4x3.hpp \
+		glm/detail/type_mat4x3.hpp \
+		glm/detail/type_mat4x3.inl \
+		glm/mat4x4.hpp \
+		glm/detail/type_mat4x4.hpp \
+		glm/detail/type_mat4x4.inl \
+		glm/trigonometric.hpp \
+		glm/detail/func_trigonometric.hpp \
+		glm/detail/func_trigonometric.inl \
+		glm/detail/_vectorize.hpp \
+		glm/detail/type_vec1.hpp \
+		glm/detail/type_vec1.inl \
+		glm/exponential.hpp \
+		glm/detail/func_exponential.hpp \
+		glm/detail/func_exponential.inl \
+		glm/detail/func_vector_relational.hpp \
+		glm/detail/func_vector_relational.inl \
+		glm/common.hpp \
+		glm/detail/func_common.hpp \
+		glm/detail/func_common.inl \
+		glm/packing.hpp \
+		glm/detail/func_packing.hpp \
+		glm/detail/func_packing.inl \
+		glm/detail/type_half.hpp \
+		glm/detail/type_half.inl \
+		glm/geometric.hpp \
+		glm/detail/func_geometric.hpp \
+		glm/detail/func_geometric.inl \
+		glm/matrix.hpp \
+		glm/detail/func_matrix.hpp \
+		glm/detail/func_matrix.inl \
+		glm/vector_relational.hpp \
+		glm/integer.hpp \
+		glm/detail/func_integer.hpp \
+		glm/detail/func_integer.inl \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		uniforms/uniformvariable.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h \
 		ui/viewformat.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLFormat \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../../Qt/5.14.2/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QKeyEvent \
-		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qevent.h
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
+		shapes/cube.h \
+		camera/OrbitingCamera.h \
+		lib/resourceloader.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFile \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfile.h \
+		uniforms/varsfile.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QList \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		gl/shaders/ShaderAttribLocations.h \
+		glm/gtc/type_ptr.hpp \
+		glm/gtc/quaternion.hpp \
+		glm/gtc/constants.hpp \
+		glm/gtc/constants.inl \
+		glm/gtc/quaternion.inl \
+		glm/gtc/type_ptr.inl \
+		glm/gtc/matrix_transform.hpp \
+		glm/gtc/matrix_transform.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o view.o ui/view.cpp
 
 viewformat.o: ui/viewformat.cpp ui/viewformat.h \
@@ -1066,11 +1631,50 @@ viewformat.o: ui/viewformat.cpp ui/viewformat.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qgl.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o viewformat.o ui/viewformat.cpp
 
+uniformvariable.o: uniforms/uniformvariable.cpp uniforms/uniformvariable.h \
+		glew-1.10.0/include/GL/glew.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTime \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o uniformvariable.o uniforms/uniformvariable.cpp
+
+varsfile.o: uniforms/varsfile.cpp uniforms/varsfile.h \
+		uniforms/uniformvariable.h \
+		glew-1.10.0/include/GL/glew.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/QGLShaderProgram \
+		../../../../Qt/5.14.2/clang_64/lib/QtOpenGL.framework/Headers/qglshaderprogram.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QTime \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qdatetime.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/QOpenGLFunctions \
+		../../../../Qt/5.14.2/clang_64/lib/QtGui.framework/Headers/qopenglfunctions.h \
+		lib/common.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QList \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFileInfo \
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
+		../../../../Qt/5.14.2/clang_64/lib/QtXml.framework/Headers/QDomDocument \
+		../../../../Qt/5.14.2/clang_64/lib/QtXml.framework/Headers/qdom.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o varsfile.o uniforms/varsfile.cpp
+
 qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_Camera.o: moc_Camera.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Camera.o moc_Camera.cpp
+
+moc_OrbitingCamera.o: moc_OrbitingCamera.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_OrbitingCamera.o moc_OrbitingCamera.cpp
 
 moc_view.o: moc_view.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_view.o moc_view.cpp

@@ -175,13 +175,13 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, Material mat){
         float NL = 0.0f;
         float refdot = 0.0f;
         float dist = distance(L.pos, intersectW);
-        attenuation = glm::min(1.0f/(L.function.x+(L.function.y*dist)+(L.function.z*pow(dist, 2))), 1.0f);
-        direction = glm::normalize(L.pos - intersectW);
-        float dot = glm::dot(normalW, direction);
-        NL = std::min(std::max(dot, 0.0f), 1.0f);
+        attenuation = min(1.0f/(L.function.x+(L.function.y*dist)+(L.function.z*pow(dist, 2))), 1.0f);
+        direction = normalize(L.pos - intersectW);
+        float dot = dot(normalW, direction);
+        NL = min(max(dot, 0.0f), 1.0f);
         vec4 ref = direction - 2.0f * normalW * NL;
-        refdot = glm::dot(glm::normalize(ref), glm::normalize(d));
-        refdot = std::max(0.0f, refdot);
+        refdot = dot(normalize(ref), normalize(d));
+        refdot = max(0.0f, refdot);
         //        if(settings.useTextureMapping){
         //            uv = calcUV(object, normal, intersectO);
         //            textureColor = calcTextureColor(material, uv, tInd);
@@ -197,15 +197,15 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, Material mat){
         //                //true tells traceRay that it is tracing for shadows
         //                traceRay(p, direction, intersects, true, tempInd, normalW, intersectW, tempnormal, intersectO);
         //                if(!intersects){
-        //                    color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*glm::pow(refdot,material.shininess)));
+        //                    color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*pow(refdot,material.shininess)));
         //                }
         //            }
         //            else{
-        //                color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*glm::pow(refdot,material.shininess)));
+        //                color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*pow(refdot,material.shininess)));
         //            }
         //        }
 
-        color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*glm::pow(refdot,material.shininess));
+        color += L.color*attenuation * (diffuseColor * NL) + (specularColor.x*pow(refdot,material.shininess));
     }
     color.x = clamp(color.x, 0.0f, 1.0f);
     color.y = clamp(color.y, 0.0f, 1.0f);
@@ -225,8 +225,4 @@ void main(){
     //add reflections?
 
     fragColor = color;
-
-    //    vec3 texColor = texture(tex, texc).rgb;
-    //    texColor = clamp(texColor + vec3(1-useTexture), vec3(0), vec3(1));
-    //    fragColor = vec4(color * texColor, 1);
 }
