@@ -116,7 +116,9 @@ DISTFILES += \
     shaders/normals/normalsArrow.vert \
     shaders/phong.frag \
     shaders/phong.vert \
+    shaders/quad.vert \
     shaders/shader.frag \
     shaders/shader.vert \
     shaders/skybox.frag \
-    shaders/skybox.vert
+    shaders/skybox.vert \
+    shaders/texture.frag

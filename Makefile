@@ -119,10 +119,12 @@ DIST          = shaders/metal.frag \
 		shaders/normals/normalsArrow.vert \
 		shaders/phong.frag \
 		shaders/phong.vert \
+		shaders/quad.vert \
 		shaders/shader.frag \
 		shaders/shader.vert \
 		shaders/skybox.frag \
 		shaders/skybox.vert \
+		shaders/texture.frag \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -524,8 +526,10 @@ qrc_resources.cpp: resources.qrc \
 		/usr/lib/qt5/bin/rcc \
 		shaders/phong.frag \
 		shaders/shader.frag \
+		shaders/quad.vert \
 		shaders/phong.vert \
 		shaders/shader.vert \
+		shaders/texture.frag \
 		shaders/skybox.vert \
 		shaders/metal.frag \
 		shaders/metal.vert \
@@ -1133,6 +1137,8 @@ moc_view.cpp: ui/view.h \
 		shapes/openglshape.h \
 		gl/datatype/VBO.h \
 		gl/datatype/VBOAttribMarker.h \
+		gl/datatype/FBO.h \
+		gl/textures/TextureParameters.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /ifs/CS/replicated/home/mchung18/course/cs1230/CS1230-Final-Project/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/ifs/CS/replicated/home/mchung18/course/cs1230/CS1230-Final-Project -I/ifs/CS/replicated/home/mchung18/course/cs1230/CS1230-Final-Project/glm -I/ifs/CS/replicated/home/mchung18/course/cs1230/CS1230-Final-Project/ui -I/ifs/CS/replicated/home/mchung18/course/cs1230/CS1230-Final-Project/glew-1.10.0/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtOpenGL -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtXml -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.5/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include ui/view.h -o moc_view.cpp
@@ -1357,7 +1363,9 @@ ui_mainwindow.h: ui/mainwindow.ui \
 		cs123_lib/sphere.h \
 		shapes/openglshape.h \
 		gl/datatype/VBO.h \
-		gl/datatype/VBOAttribMarker.h
+		gl/datatype/VBOAttribMarker.h \
+		gl/datatype/FBO.h \
+		gl/textures/TextureParameters.h
 	/usr/lib/qt5/bin/uic ui/mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -1614,6 +1622,8 @@ mainwindow.o: ui/mainwindow.cpp ui/mainwindow.h \
 		shapes/openglshape.h \
 		gl/datatype/VBO.h \
 		gl/datatype/VBOAttribMarker.h \
+		gl/datatype/FBO.h \
+		gl/textures/TextureParameters.h \
 		ui/Databinding.h \
 		/usr/include/x86_64-linux-gnu/qt5/QtCore/QObject \
 		/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QCheckBox \
@@ -2515,6 +2525,8 @@ view.o: ui/view.cpp ui/view.h \
 		shapes/openglshape.h \
 		gl/datatype/VBO.h \
 		gl/datatype/VBOAttribMarker.h \
+		gl/datatype/FBO.h \
+		gl/textures/TextureParameters.h \
 		ui/viewformat.h \
 		/usr/include/x86_64-linux-gnu/qt5/QtOpenGL/QGLFormat \
 		/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication \

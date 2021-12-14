@@ -14,6 +14,7 @@
 #include "glm/gtc/type_ptr.hpp" // glm::value_ptr
 #include "cs123_lib/sphere.h"
 #include "shapes/openglshape.h"
+#include "gl/datatype/FBO.h"
 
 class View : public QGLWidget {
     Q_OBJECT
@@ -39,10 +40,16 @@ private:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    int m_width;
+    int m_height;
+    std::unique_ptr<OpenGLShape> m_quad;
     std::unique_ptr<OpenGLShape> m_sphere;
+    std::unique_ptr<FBO> m_blurFBO1;
+    std::unique_ptr<FBO> m_blurFBO2;
     /** ID for the shader program. */
     GLuint m_program;
     GLuint m_phongprogram;
+    GLuint m_textureProgram;
 
     void rebuildMatrices();
     glm::mat4 m_view, m_projection;

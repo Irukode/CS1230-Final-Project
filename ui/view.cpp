@@ -7,9 +7,16 @@
 #include "cs123_lib/sphere.h"
 #include "gl/shaders/ShaderAttribLocations.h"
 #include "lib/resourceloader.h"
+#include "shapes/openglshape.h"
+#include "gl/textures/Texture2D.h"
+#include "Settings.h"
+#include <QMouseEvent>
+#include <QWheelEvent>
 
 View::View(QWidget *parent) : QGLWidget(ViewFormat(), parent),
-    m_time(), m_timer(), m_captureMouse(false), m_sphere(nullptr),
+    m_time(), m_timer(), m_captureMouse(false), m_width(width()), m_height(height()),
+    m_quad(nullptr), m_sphere(nullptr),
+    m_blurFBO1(nullptr), m_blurFBO2(nullptr),
     m_program(0), m_phongprogram(0),
     m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f), m_fps(60.0f),
     m_increment(0)
@@ -59,7 +66,7 @@ void View::initializeGL() {
     // Creates the shader program that will be used for drawing.
     m_program = ResourceLoader::createShaderProgram(":shaders/default.vert", ":shaders/default.frag");
     m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
-
+    m_textureProgram = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":/shaders/texture.frag");
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
@@ -68,44 +75,54 @@ void View::initializeGL() {
     m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     m_sphere->buildVAO();
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+    std::vector<GLfloat> quadData = {-1.f, 1.f, 0.f, 0.f, 1.f,
+                                    -1.f, -1.f, 0.f, 0.f, 0.f,
+                                    1.f, 1.f, 0.f, 1.f, 1.f,
+                                    1.f, -1.f, 0.f, 1.f, 0.f};
+    m_quad = std::make_unique<OpenGLShape>();
+    m_quad->setVertexData(&quadData[0], quadData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, 4);
+    m_quad->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    m_quad->setAttribute(ShaderAttrib::TEXCOORD0, 2, 3*sizeof(GLfloat), VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    m_quad->buildVAO();
+
+
+//    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+//    glFrontFace(GL_CCW);
 
 }
 
 void View::paintGL() {
+    m_blurFBO1->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // TODO: Implement the demo rendering here
     glUseProgram(m_phongprogram);
-
-    //glUniform3f(glGetUniformLocation(m_phongprogram, "color"), 0.5, 0.4, 0.8);
-
-
-    // TODO: Generate model matrix and pass it to vertex shader. (Task 3)
-    glm::mat4 translation = glm::translate(glm::vec3(0,0,0));
-    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(translation));
-
-    // TODO: Generate view matrix and pass it to vertex shader. (Task 4)
-    //glm::mat4 view = glm::lookAt(eye, center, up);
+    glm::mat4 m = glm::mat4(1.f);
+    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
     glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-
-    // TODO: Generate projection matrix and pass it to vertex shader. (Task 4)
-    //glm::mat4 projection = glm::perspective(fieldOfViewY, aspectRatio, nearClipPlane, farClipPlane);
     glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-    // TODO: Draw sphere here! (Task 1)
+    glViewport(0,0,m_width, m_height);
     m_sphere->draw();
 
-    glUseProgram(0);
+    m_blurFBO1->unbind();
+    glUseProgram(m_textureProgram);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    m_blurFBO1->getColorAttachment(0).bind();
+    m_quad->draw();
+    //glUseProgram(0);
 }
 
 void View::resizeGL(int w, int h) {
-    float ratio = static_cast<QGuiApplication *>(QCoreApplication::instance())->devicePixelRatio();
-    w = static_cast<int>(w / ratio);
-    h = static_cast<int>(h / ratio);
-    glViewport(0, 0, w, h);
+//    float ratio = static_cast<QGuiApplication *>(QCoreApplication::instance())->devicePixelRatio();
+//    w = static_cast<int>(w / ratio);
+//    h = static_cast<int>(h / ratio);
+    m_width = w;
+    m_height = h;
+
+    m_blurFBO1 = std::make_unique<FBO>(1, FBO::DEPTH_STENCIL_ATTACHMENT::DEPTH_ONLY, m_width, m_height, TextureParameters::WRAP_METHOD::CLAMP_TO_EDGE);
+    rebuildMatrices();
+    //glViewport(0, 0, w, h);
 }
 
 /// Mouse interaction code below.
