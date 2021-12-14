@@ -44,9 +44,7 @@ SOURCES += ui/mainwindow.cpp \
     ui/Databinding.cpp \
     ui/Settings.cpp \
     ui/view.cpp \
-    ui/viewformat.cpp \
-    uniforms/uniformvariable.cpp \
-    uniforms/varsfile.cpp
+    ui/viewformat.cpp
 
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
@@ -75,9 +73,7 @@ HEADERS += ui/mainwindow.h \
     ui_mainwindow.h \
     glew-1.10.0/include/GL/glew.h \
     ui/view.h \
-    ui/viewformat.h \
-    uniforms/uniformvariable.h \
-    uniforms/varsfile.h
+    ui/viewformat.h
 
 FORMS += ui/mainwindow.ui
 INCLUDEPATH += glm ui glew-1.10.0/include

@@ -16,10 +16,9 @@
  *
  */
 class OrbitingCamera : public Camera {
-    Q_OBJECT
 public:
-    OrbitingCamera();
-    ~OrbitingCamera();
+    OrbitingCamera() : m_aspectRatio(1), m_angleX(0), m_angleY(0), m_zoomZ(-5) {}
+    ~OrbitingCamera() {}
 
     virtual void setAspectRatio(float aspectRatio);
 
@@ -34,26 +33,15 @@ public:
 
     void updateMatrices();
 
-    virtual glm::mat4 getViewingMatrix() const;
-
-    virtual glm::mat4 getModelviewMatrix() const;
-
-    //glm::vec4 getPosition() const;
-
-    void updateMats();
-
 private:
     void updateProjectionMatrix();
     void updateViewMatrix();
-    void updateModelviewMatrix();
 
     glm::mat4x4 m_viewMatrix;
     glm::mat4x4 m_projectionMatrix;
     glm::mat4x4 m_scaleMatrix;
     float m_aspectRatio, m_angleX, m_angleY, m_zoomZ;
     int m_oldX, m_oldY;
-
-    glm::mat4 m_modelviewMatrix;
 };
 
 #endif // ORBITINGCAMERA_H

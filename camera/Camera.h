@@ -34,15 +34,6 @@ public:
     // Returns the matrix the unhinges the perspective view volume, given the current camera
     // settings.
     virtual glm::mat4x4 getPerspectiveMatrix() const = 0;
-
-    //! Return the modelview matrix for the current camera settings.
-    virtual glm::mat4 getModelviewMatrix() const = 0;
-
-    virtual glm::mat4 getViewingMatrix() const = 0;
-
-    //virtual glm::vec4 getPosition() const = 0;
-
-    virtual void updateMats() = 0;
     //
     // The following functions are called for mouse events on the 3D canvas tab.
     //
