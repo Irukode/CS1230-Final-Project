@@ -23,12 +23,15 @@ win32 {
 
 SOURCES += ui/mainwindow.cpp \
     camera/OrbitingCamera.cpp \
+    cs123_lib/errorchecker.cpp \
+    cs123_lib/resourceloader.cpp \
     gl/GLDebug.cpp \
     gl/datatype/FBO.cpp \
     gl/datatype/IBO.cpp \
     gl/datatype/VAO.cpp \
     gl/datatype/VBO.cpp \
     gl/datatype/VBOAttribMarker.cpp \
+    gl/glwidget.cpp \
     gl/textures/DepthBuffer.cpp \
     gl/textures/RenderBuffer.cpp \
     gl/textures/Texture.cpp \
@@ -47,12 +50,16 @@ SOURCES += ui/mainwindow.cpp \
 HEADERS += ui/mainwindow.h \
     camera/Camera.h \
     camera/OrbitingCamera.h \
+    cs123_lib/errorchecker.h \
+    cs123_lib/resourceloader.h \
+    cs123_lib/sphere.h \
     gl/GLDebug.h \
     gl/datatype/FBO.h \
     gl/datatype/IBO.h \
     gl/datatype/VAO.h \
     gl/datatype/VBO.h \
     gl/datatype/VBOAttribMarker.h \
+    gl/glwidget.h \
     gl/shaders/ShaderAttribLocations.h \
     gl/textures/DepthBuffer.h \
     gl/textures/RenderBuffer.h \
