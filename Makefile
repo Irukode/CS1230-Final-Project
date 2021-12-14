@@ -66,6 +66,7 @@ SOURCES       = ui/mainwindow.cpp \
 		gl/textures/Texture2D.cpp \
 		gl/textures/TextureParameters.cpp \
 		gl/textures/TextureParametersBuilder.cpp \
+		lib/RGBA.cpp \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
@@ -88,6 +89,7 @@ OBJECTS       = mainwindow.o \
 		Texture2D.o \
 		TextureParameters.o \
 		TextureParametersBuilder.o \
+		RGBA.o \
 		resourceloader.o \
 		main.o \
 		glew.o \
@@ -300,6 +302,7 @@ DIST          = shaders/metal.frag \
 		gl/textures/Texture2D.h \
 		gl/textures/TextureParameters.h \
 		gl/textures/TextureParametersBuilder.h \
+		lib/RGBA.h \
 		lib/resourceloader.h \
 		ui/Settings.h \
 		ui_mainwindow.h \
@@ -319,6 +322,7 @@ DIST          = shaders/metal.frag \
 		gl/textures/Texture2D.cpp \
 		gl/textures/TextureParameters.cpp \
 		gl/textures/TextureParametersBuilder.cpp \
+		lib/RGBA.cpp \
 		lib/resourceloader.cpp \
 		main.cpp \
 		glew-1.10.0/src/glew.c \
@@ -747,8 +751,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../../Qt/5.14.2/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h gl/GLDebug.h gl/datatype/FBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/VBO.h gl/datatype/VBOAttribMarker.h gl/shaders/ShaderAttribLocations.h gl/textures/DepthBuffer.h gl/textures/RenderBuffer.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
-	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp gl/GLDebug.cpp gl/datatype/FBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/VBO.cpp gl/datatype/VBOAttribMarker.cpp gl/textures/DepthBuffer.cpp gl/textures/RenderBuffer.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.h camera/Camera.h camera/OrbitingCamera.h gl/GLDebug.h gl/datatype/FBO.h gl/datatype/IBO.h gl/datatype/VAO.h gl/datatype/VBO.h gl/datatype/VBOAttribMarker.h gl/shaders/ShaderAttribLocations.h gl/textures/DepthBuffer.h gl/textures/RenderBuffer.h gl/textures/Texture.h gl/textures/Texture2D.h gl/textures/TextureParameters.h gl/textures/TextureParametersBuilder.h lib/RGBA.h lib/resourceloader.h ui/Settings.h ui_mainwindow.h glew-1.10.0/include/GL/glew.h ui/view.h ui/viewformat.h $(DISTDIR)/
+	$(COPY_FILE) --parents ui/mainwindow.cpp camera/OrbitingCamera.cpp gl/GLDebug.cpp gl/datatype/FBO.cpp gl/datatype/IBO.cpp gl/datatype/VAO.cpp gl/datatype/VBO.cpp gl/datatype/VBOAttribMarker.cpp gl/textures/DepthBuffer.cpp gl/textures/RenderBuffer.cpp gl/textures/Texture.cpp gl/textures/Texture2D.cpp gl/textures/TextureParameters.cpp gl/textures/TextureParametersBuilder.cpp lib/RGBA.cpp lib/resourceloader.cpp main.cpp glew-1.10.0/src/glew.c ui/Settings.cpp ui/view.cpp ui/viewformat.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ui/mainwindow.ui $(DISTDIR)/
 
 
@@ -940,7 +944,8 @@ OrbitingCamera.o: camera/OrbitingCamera.cpp glm/gtc/matrix_transform.hpp \
 		camera/Camera.h \
 		ui/Settings.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
-		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h
+		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		lib/RGBA.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OrbitingCamera.o camera/OrbitingCamera.cpp
 
 GLDebug.o: gl/GLDebug.cpp gl/GLDebug.h \
@@ -1008,6 +1013,9 @@ TextureParametersBuilder.o: gl/textures/TextureParametersBuilder.cpp gl/textures
 		glew-1.10.0/include/GL/glew.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TextureParametersBuilder.o gl/textures/TextureParametersBuilder.cpp
 
+RGBA.o: lib/RGBA.cpp lib/RGBA.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o RGBA.o lib/RGBA.cpp
+
 resourceloader.o: lib/resourceloader.cpp lib/resourceloader.h \
 		glew-1.10.0/include/GL/glew.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFile \
@@ -1031,6 +1039,7 @@ glew.o: glew-1.10.0/src/glew.c glew-1.10.0/include/GL/glew.h \
 Settings.o: ui/Settings.cpp ui/Settings.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		lib/RGBA.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QFile \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/qfile.h \
 		../../../../Qt/5.14.2/clang_64/lib/QtCore.framework/Headers/QSettings \

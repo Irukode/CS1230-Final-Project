@@ -23,7 +23,7 @@ uniform lights[numLights];
 struct t{
     float mT;
     vec4 normal;
-} mt[numSpheres];
+} mt[numSpheres], c;
 
 // probably gonna be in array
 //struct Material {
@@ -85,6 +85,67 @@ void intersectSphere(vec4 d, vec4 eye, int i)
 }
 
 //intersect cube
+intersectCube(vec4 eye, vec4 d){
+    bool intersection = false;
+
+    if(d.y!=0){
+        float t1 = (0.5f-eye.y)/d.y;
+        vec4 intersect1 = eye+(t1*d);
+        float t2 = (-0.5f-eye.y)/d.y;
+        vec4 intersect2 = eye+(t2*d);
+        if(abs(intersect1.x)<=0.5f && abs(intersect1.z) <= 0.5f){
+            if(t1<t && t1>=0){
+                c.mT = t1;
+                c.normal = vec4(0,1,0,0);
+            }
+        }
+
+        if(abs(intersect2.x)<=0.5f && abs(intersect2.z) <= 0.5f){
+            if(t2<t && t2>=0){
+                c.mT = t2;
+                c.normal = vec4(0,-1,0,0);
+            }
+        }
+    }
+
+    if(d.x!=0){
+        float t3 = (0.5f-eye.x)/d.x;
+        vec4 intersect3 = eye+(t3*d);
+        if(abs(intersect3.y)<=0.5f && abs(intersect3.z) <= 0.5f){
+            if(t3<t && t3>=0){
+                c.mT = t3;
+                c.normal = vec4(1,0,0,0);
+            }
+        }
+        float t4 = (-0.5f-eye.x)/d.x;
+        vec4 intersect4 = eye+(t4*d);
+        if(abs(intersect4.y)<=0.5f && abs(intersect4.z) <= 0.5f){
+            if(t4<t && t4>=0){
+                c.mT = t4;
+                c.normal = vec4(-1,0,0,0);
+            }
+        }
+    }
+
+    if(d.z!=0){
+        float t5 = (0.5f-eye.z)/d.z;
+        vec4 intersect5 = eye+(t5*d);
+        if(abs(intersect5.y)<=0.5f && abs(intersect5.x) <= 0.5f){
+            if(t5<t && t5>=0){
+                c.mT = t5;
+                c.normal = vec4(0,0,1,0);
+            }
+        }
+        float t6 = (-0.5f-eye.z)/d.z;
+        vec4 intersect6 = eye+(t6*d);
+        if(abs(intersect6.y)<=0.5f && abs(intersect6.x) <= 0.5f){
+            if(t6<t && t6>=0){
+                c.mT = t6;
+                c.normal = vec4(0,0,-1,0);
+            }
+        }
+    }
+}
 
 vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, Material mat){
     vec4 color;
