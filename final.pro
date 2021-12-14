@@ -114,6 +114,8 @@ DISTFILES += \
     shaders/normals/normalsArrow.gsh \
     shaders/normals/normalsArrow.frag \
     shaders/normals/normalsArrow.vert \
+    shaders/phong.frag \
+    shaders/phong.vert \
     shaders/shader.frag \
     shaders/shader.vert \
     shaders/skybox.frag \

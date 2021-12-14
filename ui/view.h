@@ -34,6 +34,7 @@ private:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -41,6 +42,7 @@ private:
     std::unique_ptr<OpenGLShape> m_sphere;
     /** ID for the shader program. */
     GLuint m_program;
+    GLuint m_phongprogram;
 
     void rebuildMatrices();
     glm::mat4 m_view, m_projection;

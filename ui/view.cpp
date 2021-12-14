@@ -9,11 +9,13 @@
 #include "lib/resourceloader.h"
 
 View::View(QWidget *parent) : QGLWidget(ViewFormat(), parent),
-    m_time(), m_timer(), m_captureMouse(false), m_sphere(nullptr), m_fps(60.0f),
+    m_time(), m_timer(), m_captureMouse(false), m_sphere(nullptr),
+    m_program(0), m_phongprogram(0),
+    m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f), m_fps(60.0f),
     m_increment(0)
 {
     // View needs all mouse move events, not just mouse drag events
-    setMouseTracking(true);
+    setMouseTracking(false);
 
     // Hide the cursor
     if (m_captureMouse) {
@@ -56,6 +58,8 @@ void View::initializeGL() {
 
     // Creates the shader program that will be used for drawing.
     m_program = ResourceLoader::createShaderProgram(":shaders/default.vert", ":shaders/default.frag");
+    m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
+
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
@@ -75,38 +79,22 @@ void View::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // TODO: Implement the demo rendering here
-    //float time = m_increment++ / (float) m_fps;      // Time in seconds.
+    glUseProgram(m_phongprogram);
 
-    float fieldOfViewY = 0.8f;                       // Vertical field of view angle, in radians.
-    float aspectRatio = (float)width() / height();   // Aspect ratio of the window.
-    float nearClipPlane = 0.1f;                      // Near clipping plane.
-    float farClipPlane = 100.f;                      // Far clipping plane.
+    //glUniform3f(glGetUniformLocation(m_phongprogram, "color"), 0.5, 0.4, 0.8);
 
-    glm::vec3 eye = glm::vec3(0.f, 1.f, 6.f);        // Camera position.
-    glm::vec3 center = glm::vec3(0.f, 1.f, 0.f);     // Where camera is looking.
-    glm::vec3 up = glm::vec3(0.f, 1.f, 0.f);         // Up direction.
-
-
-
-    glUseProgram(m_program);
-
-    glUniform3f(glGetUniformLocation(m_program, "color"), 0.5, 0.4, 0.8);
-
-    // TODO: Use the equation to translate the ball. (Task 7)
-    //float y = 0.5 + fabs( sin(3 * time) );
 
     // TODO: Generate model matrix and pass it to vertex shader. (Task 3)
-    glm::mat4 translation = glm::translate(glm::vec3(0,0.5,0));
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "model"), 1, GL_FALSE, glm::value_ptr(translation));
+    glm::mat4 translation = glm::translate(glm::vec3(0,0,0));
+    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(translation));
 
     // TODO: Generate view matrix and pass it to vertex shader. (Task 4)
-    glm::mat4 view = glm::lookAt(eye, center, up);
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    //glm::mat4 view = glm::lookAt(eye, center, up);
+    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
 
     // TODO: Generate projection matrix and pass it to vertex shader. (Task 4)
-    glm::mat4 projection = glm::perspective(fieldOfViewY, aspectRatio, nearClipPlane, farClipPlane);
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "perspective"), 1, GL_FALSE, glm::value_ptr(projection));
-
+    //glm::mat4 projection = glm::perspective(fieldOfViewY, aspectRatio, nearClipPlane, farClipPlane);
+    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
     // TODO: Draw sphere here! (Task 1)
     m_sphere->draw();
 
@@ -120,27 +108,50 @@ void View::resizeGL(int w, int h) {
     glViewport(0, 0, w, h);
 }
 
-void View::mousePressEvent(QMouseEvent *event) {
+/// Mouse interaction code below.
 
+void View::mousePressEvent(QMouseEvent *event) {
+    m_prevMousePos = event->pos();
 }
 
 void View::mouseMoveEvent(QMouseEvent *event) {
-    // This starter code implements mouse capture, which gives the change in
-    // mouse position since the last mouse movement. The mouse needs to be
-    // recentered after every movement because it might otherwise run into
-    // the edge of the screen, which would stop the user from moving further
-    // in that direction. Note that it is important to check that deltaX and
-    // deltaY are not zero before recentering the mouse, otherwise there will
-    // be an infinite loop of mouse move events.
-    if(m_captureMouse) {
-        int deltaX = event->x() - width() / 2;
-        int deltaY = event->y() - height() / 2;
-        if (!deltaX && !deltaY) return;
-        QCursor::setPos(mapToGlobal(QPoint(width() / 2, height() / 2)));
-
-        // TODO: Handle mouse movements here
-    }
+    m_angleX += 3 * (event->x() - m_prevMousePos.x()) / (float) width();
+    m_angleY += 3 * (event->y() - m_prevMousePos.y()) / (float) height();
+    m_prevMousePos = event->pos();
+    rebuildMatrices();
 }
+
+void View::wheelEvent(QWheelEvent *event) {
+    m_zoom -= event->delta() / 100.f;
+    rebuildMatrices();
+}
+
+void View::rebuildMatrices() {
+    m_view = glm::translate(glm::vec3(0, 0, -m_zoom)) *
+             glm::rotate(m_angleY, glm::vec3(1,0,0)) *
+             glm::rotate(m_angleX, glm::vec3(0,1,0));
+
+    m_projection = glm::perspective(0.8f, (float)width()/height(), 0.1f, 100.f);
+    update();
+}
+
+//void View::mouseMoveEvent(QMouseEvent *event) {
+//    // This starter code implements mouse capture, which gives the change in
+//    // mouse position since the last mouse movement. The mouse needs to be
+//    // recentered after every movement because it might otherwise run into
+//    // the edge of the screen, which would stop the user from moving further
+//    // in that direction. Note that it is important to check that deltaX and
+//    // deltaY are not zero before recentering the mouse, otherwise there will
+//    // be an infinite loop of mouse move events.
+//    if(m_captureMouse) {
+//        int deltaX = event->x() - width() / 2;
+//        int deltaY = event->y() - height() / 2;
+//        if (!deltaX && !deltaY) return;
+//        QCursor::setPos(mapToGlobal(QPoint(width() / 2, height() / 2)));
+
+//        // TODO: Handle mouse movements here
+//    }
+//}
 
 void View::mouseReleaseEvent(QMouseEvent *event) {
 
@@ -165,3 +176,4 @@ void View::tick() {
     // Flag this view for repainting (Qt will call paintGL() soon after)
     update();
 }
+
