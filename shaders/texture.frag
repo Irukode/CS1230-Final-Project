@@ -17,11 +17,22 @@ bool inArea(float cX, float cY) {
 //void main() {
 //    fragColor = vec4(uv.x, uv.y,
 //                     0, 1);
+<<<<<<< HEAD
 //}
 //What does this draw? (assume entire screen is rendered)
 void main() {
     float cX = gl_FragCoord.x - uResolution.x/2.0;
     float cY = gl_FragCoord.y - uResolution.y/2.0;
+=======
+//    fragColor = vec4(gl_FragCoord.x /(uResolution.x),
+//                     gl_FragCoord.y /(uResolution.y),
+//                     0, 1);
+//}
+// What does this draw? (assume entire screen is rendered)
+void main() {
+    float cX = gl_FragCoord.x - uResolution.x/2.0f;
+    float cY = gl_FragCoord.y - uResolution.y/2.0f;
+>>>>>>> 4b22afeb59562f2239334d3fbbd72b61bca57d36
     if (inArea(cX, cY)) {
         fragColor = vec4(1.0, 0.0, 0.0, 1.0);
     } else {
