@@ -37,7 +37,8 @@ struct miscData{
     vec4 normalW;
     bool intersects;
     float t;
-    float normal;
+    vec4 normal;
+    mat4 matTransformation;
 };
 
 Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
@@ -143,23 +144,29 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
 
 miscData intersect(vec4 d, vec4 e) {
     miscData data;
-    float t = 100000.f;
-    vec4 normal;
+    data.t = 100000.f;
+    data.normal = vec4(0.f);
     data.intersects = false;
-    bool intersection = false;
     for (int i = 0; i < numSpheres; i++){ // for each Sphere
-        mat4 matTransformation = Spheres;
+        mat4 matTrans = Spheres;
+        miscData tempData;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        data = intersectSphere(matTransformation*d, matTransformation*e, t);
-        if(data.intersects){
-            t = data.t;
-            normal = data.normal;
-            intersection = true;
+        tempData = intersectSphere(matTrans*d, matTrans*e, data.t);
+        if(tempData.intersects){
+
+            if(tempData.t<data.t){
+                data.t = tempData.t;
+                data.normal = tempData.normal;
+                data.intersects = true;
+                data.matTransformation = matTrans;
+            }
+
         }
     }
-    if(intersection){
-        data.intersectW = e+t*d;
-        data.normalW = normalize(inverse(Spheres)*normal);
+
+    if(data.intersects){
+        data.intersectW = e+data.t*d;
+        data.normalW = normalize(inverse(data.matTransformation)*data.normal);
     }
     return data;
 }
