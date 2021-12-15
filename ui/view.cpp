@@ -64,7 +64,7 @@ void View::initializeGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Creates the shader program that will be used for drawing.
-    m_program = ResourceLoader::createShaderProgram(":shaders/default.vert", ":shaders/default.frag");
+    m_program = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":shaders/default.frag");
     m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
     m_textureProgram = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":/shaders/texture.frag");
 
@@ -102,20 +102,25 @@ void View::initializeGL() {
 void View::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // TODO: Implement the demo rendering here
-//    glUseProgram(m_phongprogram);
-//    glm::mat4 m = glm::mat4(1.f);
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-    glUseProgram(m_textureProgram);
+    glUseProgram(m_program);
     glm::mat4 m = glm::mat4(1.f);
     glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec2 uResolution(m_width, m_height);
-    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, GL_FALSE, glm::value_ptr(uResolution));
-    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, GL_FALSE, glm::value_ptr(camera));
-    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
+    glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
+    glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), 1, GL_FALSE, glm::value_ptr(m));
+    rebuildMatrices();
+
+//    glUseProgram(m_textureProgram);
+//    glm::mat4 m = glm::mat4(1.f);
+//    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
+//    glm::vec2 uResolution(m_width, m_height);
+//    glUniform2fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, glm::value_ptr(uResolution));
+//    glUniform4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, glm::value_ptr(camera));
+//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
+//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
 
 //    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
 //    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
@@ -123,10 +128,11 @@ void View::paintGL() {
 
     glViewport(0,0,m_width, m_height);
 
-    glUseProgram(m_textureProgram);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glUseProgram(m_textureProgram);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_quad->draw();
-    //glUseProgram(0);
+    //m_sphere->draw();
+    glUseProgram(0);
 }
 
 void View::resizeGL(int w, int h) {

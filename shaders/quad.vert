@@ -8,9 +8,11 @@ uniform vec4 camera;
 
 out vec2 uv;
 out vec4 direction;
+out vec4 Position;
 
 void main() {
     uv = inUV;
     gl_Position = vec4(position, 1.0);
     direction = inverse(view) * gl_Position - camera;
+    Position = gl_Position;
 }

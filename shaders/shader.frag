@@ -1,20 +1,21 @@
 #version 400 core
-#define PI 3.14159265358979323846
+const float PI = 3.14159265358979323846;
 //global data
 float ka = 0.5;
 float kd = 0.5;
 float ks = 0.5;
 
 out vec4 fragColor;
+in vec4 Position;
+in vec4 direction;
+in vec2 uv;
 
 //Do Raytracing in here
 uniform mat4 cam2world; //scale*view
 uniform vec4 eye; //view*vec4(0,0,0,1)
-uniform float width;
-uniform float height;
-uniform int numSpheres;
-uniform vec3 position;
-uniform vec3 Spheres[numSpheres];
+uniform vec2 uResolution;
+const int numSpheres = 1; //for now
+uniform mat4 Spheres;//for now, needs to be array
 
 struct Material{
     vec4 diffuse;
@@ -40,11 +41,11 @@ struct miscData{
 Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
 Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
 
-bool intersectSphere(vec4 d, vec4 eye, out float t, out vec4 normal)
+bool intersectSphere(vec4 d, vec4 e, out float t, out vec4 normal)
 {
     float a = pow(d.x, 2.0f) + pow(d.y, 2.0f) + pow(d.z, 2.0f);
-    float b = 2.0f * (eye.x*d.x  + eye.y*d.y +  eye.z*d.z);
-    float c = pow(eye.x, 2.0f) + pow(eye.y, 2.0f) + pow(eye.z, 2.0f) - 0.25f;
+    float b = 2.0f * (e.x*d.x  + e.y*d.y +  e.z*d.z);
+    float c = pow(e.x, 2.0f) + pow(e.y, 2.0f) + pow(e.z, 2.0f) - 0.25f;
     float disc = pow(a,2.f) - (4*a*c);
     if(disc>=0){
         float tPlus = (-b + sqrt(disc))/ (2*a);
@@ -55,17 +56,17 @@ bool intersectSphere(vec4 d, vec4 eye, out float t, out vec4 normal)
         }
         else if (tPlus<0 && tMinus >= 0){
             t = tMinus;
-            normal = normalize(eye+t*d);
+            normal = normalize(e+t*d);
             return true;
         }
         else if (tPlus>=0 && tMinus < 0){
             t = tPlus;
-            normal = normalize(eye+t*d);
+            normal = normalize(e+t*d);
             return true;
         }
         else{
             t = min(tPlus, tMinus);
-            normal = normalize(eye+t*d);
+            normal = normalize(e+t*d);
             return true;
         }
     }
@@ -137,26 +138,27 @@ bool intersectSphere(vec4 d, vec4 eye, out float t, out vec4 normal)
 //    }
 //}
 
-miscData intersect(vec4 d, vec4 eye) {
+miscData intersect(vec4 d, vec4 e) {
     miscData data;
     float t = 100000.f;
-    float t1;
     vec4 normal;
     vec4 normal1;
     for (int i = 0; i < numSpheres; i++){ // for each Sphere
+        float t1;
+        mat4 matTransmornation = Spheres;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        if(intersectSphere(d, eye, t1, normal1)){
+        if(intersectSphere(Spheres*d, Spheres*e, t1, normal1)){
             if(t1<t){
                 t = t1;
                 normal = normal1;
             }
         }
     }
+    data.intersects = false;
     if(t != 100000.f){
-        data.intersectW = eye+t*d;
-        //data.normalW = normalize(objectTransformation*normal);
+        data.intersectW = e+t*d;
+        data.normalW = normalize(Spheres*normal);
         data.intersects = true;
-        //color = calculateLighting(intersectW, d, normalW);
     }
     return data;
 }
@@ -200,9 +202,9 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
 
 
 
-vec4 raytrace(vec4 d, vec4 eye){
-    vec4 color;
-    miscData data = intersect(d, eye);
+vec4 raytrace(vec4 d, vec4 e){
+    vec4 color = vec4(0.f);
+    miscData data = intersect(d, e);
     if(data.intersects){
         color = calculateLighting(data.intersectW, d, data.normalW);
     }
@@ -213,12 +215,17 @@ vec4 raytrace(vec4 d, vec4 eye){
 }
 
 void main(){
-    float x = position.x;
-    float y = position.y;
-    vec4 world = cam2world;
-    vec4 d = normalize(world-eye);
-
-    vec4 color = raytrace(d,eye);
+    //current pixel given from quad.vert
+//    float x = Position;
+//    float y = Position;
+    float x = gl_FragCoord.x - uResolution.x/2.0;
+    float y = gl_FragCoord.y - uResolution.y/2.0;
+    vec4 view = vec4(x, y, -1.f, 1.f);
+    //transform to world space
+    view = cam2world*view;
+    vec4 e = cam2world*eye;
+    vec4 d = normalize(view-e);
+    vec4 color = raytrace(d,e);
 
     //add reflections?
 
