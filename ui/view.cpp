@@ -81,10 +81,10 @@ void View::initializeGL() {
 //    m_spheres[0]->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
 //    m_spheres[0]->buildVAO();
 
-    std::vector<GLfloat> quadData = {-1.f, 0.f, 0.f, 0.f, 1.f,
+    std::vector<GLfloat> quadData = {-1.f, 1.f, 0.f, 0.f, 1.f,
                                     -1.f, -1.f, 0.f, 0.f, 0.f,
-                                    0.f, 0.f, 0.f, 1.f, 1.f,
-                                    0.f, -1.f, 0.f, 1.f, 0.f};
+                                    1.f, 1.f, 0.f, 1.f, 1.f,
+                                    1.f, -1.f, 0.f, 1.f, 0.f};
     m_quad = std::make_unique<OpenGLShape>();
     m_quad->setVertexData(&quadData[0], quadData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, 4);
     m_quad->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
@@ -100,7 +100,6 @@ void View::initializeGL() {
 }
 
 void View::paintGL() {
-//    m_blurFBO1->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // TODO: Implement the demo rendering here
 //    glUseProgram(m_phongprogram);
@@ -126,7 +125,6 @@ void View::paintGL() {
 
     glUseProgram(m_textureProgram);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    m_blurFBO1->getColorAttachment(0).bind();
     m_quad->draw();
     //glUseProgram(0);
 }
