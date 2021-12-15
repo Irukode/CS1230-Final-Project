@@ -70,10 +70,12 @@ void View::initializeGL() {
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
-    m_sphere = std::make_unique<OpenGLShape>();
-    m_sphere->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
-    m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
-    m_sphere->buildVAO();
+//    std::shared_ptr<OpenGLShape> sphere1;
+//    m_spheres.push_back(sphere1);
+//    m_spheres[0] = std::make_unique<OpenGLShape>();
+//    m_spheres[0]->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
+//    m_spheres[0]->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+//    m_spheres[0]->buildVAO();
 
     std::vector<GLfloat> quadData = {-1.f, 1.f, 0.f, 0.f, 1.f,
                                     -1.f, -1.f, 0.f, 0.f, 0.f,
@@ -102,8 +104,15 @@ void View::paintGL() {
     glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
     glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
     glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-    glViewport(0,0,m_width, m_height);
-    m_sphere->draw();
+//<<<<<<< HEAD
+//    // TODO: Draw sphere here! (Task 1)
+//    for(int i = 0; i < m_spheres.size(); i++) {
+//        m_spheres[i]->draw();
+//    }
+//=======
+//    glViewport(0,0,m_width, m_height);
+//    m_sphere->draw();
+//>>>>>>> d9e1df2740af00a86f9f9d5218d38c84148d10dd
 
     m_blurFBO1->unbind();
     glUseProgram(m_textureProgram);
