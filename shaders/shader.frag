@@ -222,11 +222,11 @@ void main(){
     //current pixel given from quad.vert
 //    float x = Position;
 //    float y = Position;
-    float x = gl_FragCoord.x - uResolution.x/2.0;
-    float y = gl_FragCoord.y - uResolution.y/2.0;
-    vec4 view = vec4(x, y, -1.f, 1.f);
+//    float x = gl_FragCoord.x - uResolution.x/2.0;
+//    float y = gl_FragCoord.y - uResolution.y/2.0;
+//    vec4 view = vec4(x, y, -1.f, 1.f);
     //transform to world space
-    view = cam2world*view;
+//    view = cam2world*view;
     vec4 e = cam2world*eye;
     vec4 d = normalize(view-e);
     vec4 color = raytrace(d,e);
