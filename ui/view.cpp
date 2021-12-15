@@ -77,10 +77,10 @@ void View::initializeGL() {
 //    m_spheres[0]->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
 //    m_spheres[0]->buildVAO();
 
-    std::vector<GLfloat> quadData = {-1.f, 1.f, 0.f, 0.f, 1.f,
+    std::vector<GLfloat> quadData = {-1.f, 0.f, 0.f, 0.f, 1.f,
                                     -1.f, -1.f, 0.f, 0.f, 0.f,
-                                    1.f, 1.f, 0.f, 1.f, 1.f,
-                                    1.f, -1.f, 0.f, 1.f, 0.f};
+                                    0.f, 0.f, 0.f, 1.f, 1.f,
+                                    0.f, -1.f, 0.f, 1.f, 0.f};
     m_quad = std::make_unique<OpenGLShape>();
     m_quad->setVertexData(&quadData[0], quadData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLE_STRIP, 4);
     m_quad->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
@@ -96,28 +96,28 @@ void View::initializeGL() {
 }
 
 void View::paintGL() {
-    m_blurFBO1->bind();
+//    m_blurFBO1->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // TODO: Implement the demo rendering here
-    glUseProgram(m_phongprogram);
+//    glUseProgram(m_phongprogram);
+//    glm::mat4 m = glm::mat4(1.f);
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+    glUseProgram(m_textureProgram);
     glm::mat4 m = glm::mat4(1.f);
-    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-//<<<<<<< HEAD
-//    // TODO: Draw sphere here! (Task 1)
-//    for(int i = 0; i < m_spheres.size(); i++) {
-//        m_spheres[i]->draw();
-//    }
-//=======
-//    glViewport(0,0,m_width, m_height);
-//    m_sphere->draw();
-//>>>>>>> d9e1df2740af00a86f9f9d5218d38c84148d10dd
+    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
+    glm::vec2 uResolution(m_width, m_height);
+    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, GL_FALSE, glm::value_ptr(uResolution));
+    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, GL_FALSE, glm::value_ptr(camera));
+    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
+    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
 
-    m_blurFBO1->unbind();
+//    m_blurFBO1->unbind();
     glUseProgram(m_textureProgram);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m_blurFBO1->getColorAttachment(0).bind();
+//    m_blurFBO1->getColorAttachment(0).bind();
     m_quad->draw();
     //glUseProgram(0);
 }
