@@ -31,6 +31,12 @@ struct Light {
     float quadratic;
 };
 
+struct miscData{
+    vec4 intersectW;
+    vec4 normalW;
+    bool intersects;
+};
+
 Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
 Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
 
@@ -131,11 +137,45 @@ bool intersectSphere(vec4 d, vec4 eye, out float t, out vec4 normal)
 //    }
 //}
 
-vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, bool shadows){
+miscData intersect(vec4 d, vec4 eye) {
+    miscData data;
+    float t = 100000.f;
+    float t1;
+    vec4 normal;
+    vec4 normal1;
+    for (int i = 0; i < numSpheres; i++){ // for each Sphere
+        //intersectSphere(d,eye, i, ); //might need to add transformation for object space
+        if(intersectSphere(d, eye, t1, normal1)){
+            if(t1<t){
+                t = t1;
+                normal = normal1;
+            }
+        }
+    }
+    if(t != 100000.f){
+        data.intersectW = eye+t*d;
+        //data.normalW = normalize(objectTransformation*normal);
+        data.intersects = true;
+        //color = calculateLighting(intersectW, d, normalW);
+    }
+    return data;
+}
+
+vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
     vec4 color;
     vec4 diffuseColor = kd*silver.diffuse;
     vec4 specularColor = ks*silver.specular;
     vec4 ambientColor = ka*silver.ambient;
+//        if(shadows){
+//            bool intersects = false;
+//            vec4 p = intersectW+0.0003f*normalW;
+//            vec4 tempnormal;
+//            intersect(d, p, true, intersects);
+//            if(!intersects){
+//                color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+//            }
+
+//        }
 
     //lighting stuff
     float NL = 0.0f;
@@ -149,19 +189,7 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, bool shadows){
     refdot = dot(normalize(ref), normalize(d));
     refdot = max(0.0f, refdot);
 
-//    if(shadows){
-//        bool intersects = false;
-//        vec4 p = intersectW+0.0003f*normalW;
-//        vec4 tempnormal;
-//        intersect(d, p, true, intersects);
-//        if(!intersects){
-//            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-//        }
-
-//    }
-    else{
-        color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-    }
+    color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
 
     color.x = clamp(color.x, 0.0f, 1.0f);
     color.y = clamp(color.y, 0.0f, 1.0f);
@@ -170,33 +198,16 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW, bool shadows){
     return color;
 }
 
-vec4 intersect(vec4 d, vec4 eye, bool shadows, out bool intersects) {
-    float t = 100000.f;
-    float t1;
-    vec4 normal;
-    vec4 normal1;
-    for (int i = 0; i < numSpheres; i++){ // for each Sphere
-        //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        if(intersectSphere(d, eye, t1, normal1)){
-            if(t1<t){
-                t = t1;
-                normal = normal1;
-                intersects = true;
-            }
-        }
-    }
 
+
+vec4 raytrace(vec4 d, vec4 eye){
     vec4 color;
-    if(!shadows){
-        vec4 intersectW;
-        vec4 normalW;
-        if(t != 100000.f){
-            intersectW = eye+t*d;
-            //normalW = normalize(objectTransformation*normal);
-            color = calculateLighting(intersectW, d, normalW, true);
-        }
+    miscData data = intersect(d, eye);
+    if(data.intersects){
+        color = calculateLighting(data.intersectW, d, data.normalW);
     }
 
+    //reflections
 
     return color;
 }
@@ -204,10 +215,11 @@ vec4 intersect(vec4 d, vec4 eye, bool shadows, out bool intersects) {
 void main(){
     float x = position.x;
     float y = position.y;
-    //vec4 world = cam2world;
+    vec4 world = cam2world;
     vec4 d = normalize(world-eye);
 
-    vec4 color = intersect(d,eye, false, false);
+    vec4 color = raytrace(d,eye);
+
     //add reflections?
 
     //color = ka*silver.ambient +  kd*silver.diffuse + ks*silver.specular;

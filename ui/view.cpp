@@ -70,6 +70,10 @@ void View::initializeGL() {
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
+    m_sphere = std::make_unique<OpenGLShape>();
+    m_sphere->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
+    m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    m_sphere->buildVAO();
 //    std::shared_ptr<OpenGLShape> sphere1;
 //    m_spheres.push_back(sphere1);
 //    m_spheres[0] = std::make_unique<OpenGLShape>();
