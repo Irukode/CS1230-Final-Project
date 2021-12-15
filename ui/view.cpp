@@ -102,33 +102,25 @@ void View::initializeGL() {
 void View::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // TODO: Implement the demo rendering here
-    glUseProgram(m_program);
-    glm::mat4 m = glm::mat4(1.f);
-    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
-    glm::vec2 uResolution(m_width, m_height);
-<<<<<<< HEAD
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
-    glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
-    glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), 1, GL_FALSE, glm::value_ptr(m));
-    rebuildMatrices();
-
-//    glUseProgram(m_textureProgram);
+//    glUseProgram(m_program);
 //    glm::mat4 m = glm::mat4(1.f);
 //    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
 //    glm::vec2 uResolution(m_width, m_height);
-//    glUniform2fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, glm::value_ptr(uResolution));
-//    glUniform4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, glm::value_ptr(camera));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-=======
-    glUniform2fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1,  glm::value_ptr(uResolution));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
+//    glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
+//    glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), 1, GL_FALSE, glm::value_ptr(m));
+    rebuildMatrices();
+
+    glUseProgram(m_textureProgram);
+    glm::mat4 m = glm::mat4(1.f);
+    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
+    glm::vec2 uResolution(m_width, m_height);
+    glUniform2fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, glm::value_ptr(uResolution));
     glUniform4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, glm::value_ptr(camera));
     glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
     glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
     glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
->>>>>>> 4b22afeb59562f2239334d3fbbd72b61bca57d36
 
 //    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
 //    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));

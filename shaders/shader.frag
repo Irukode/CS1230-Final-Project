@@ -168,16 +168,6 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
     vec4 diffuseColor = kd*silver.diffuse;
     vec4 specularColor = ks*silver.specular;
     vec4 ambientColor = ka*silver.ambient;
-//        if(shadows){
-//            bool intersects = false;
-//            vec4 p = intersectW+0.0003f*normalW;
-//            vec4 tempnormal;
-//            intersect(d, p, true, intersects);
-//            if(!intersects){
-//                color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-//            }
-
-//        }
 
     //lighting stuff
     float NL = 0.0f;
@@ -191,7 +181,19 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
     refdot = dot(normalize(ref), normalize(d));
     refdot = max(0.0f, refdot);
 
-    color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+    bool shadows = true;
+    if(shadows){
+        bool intersects = false;
+        vec4 p = intersectW+0.0003f*normalW;
+        vec4 tempnormal;
+        if(intersect(d, p).intersects){
+            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+        }
+
+    }
+    else{
+            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+    }
 
     color.x = clamp(color.x, 0.0f, 1.0f);
     color.y = clamp(color.y, 0.0f, 1.0f);
@@ -208,8 +210,10 @@ vec4 raytrace(vec4 d, vec4 e){
     if(data.intersects){
         color = calculateLighting(data.intersectW, d, data.normalW);
     }
+    int depth = 3;
+    for(int i = 0; i < depth; i++){
 
-    //reflections
+    }
 
     return color;
 }
@@ -227,8 +231,5 @@ void main(){
     vec4 d = normalize(view-e);
     vec4 color = raytrace(d,e);
 
-    //add reflections?
-
-    //color = ka*silver.ambient +  kd*silver.diffuse + ks*silver.specular;
     fragColor = color;
 }
