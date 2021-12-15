@@ -71,7 +71,7 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
             if(tMinus<minT && tMinus >= 0){
                 tTemp = tMinus;
                 data.intersects = true;
-                vec4 intersect2 = e+tPlus*d;
+                vec4 intersect2 = e+tMinus*d;
                 data.normal = normalize(vec4(2*intersect2.x, 2*intersect2.y, 2*intersect2.z, 0));
             }
         }
@@ -156,7 +156,7 @@ miscData intersect(vec4 d, vec4 e) {
         mat4 matTrans = Spheres;
         miscData tempData;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        tempData = intersectSphere(matTrans*d, matTrans*e, data.t);
+        tempData = intersectSphere(inverse(matTrans)*d, inverse(matTrans)*e, data.t);
         if(tempData.intersects){
 
             if(tempData.t<data.t){
@@ -237,7 +237,7 @@ void main(){
 //    float y = Position.y;
     float x = gl_FragCoord.x - uResolution.x/2.0;
     float y = gl_FragCoord.y - uResolution.y/2.0;
-    vec4 view = vec4(x, y, -1.f, 1.f);
+    vec4 view = vec4(x, y, -4.f, 0.f);
 //    transform to world space
     view = cam2world*view;
 
