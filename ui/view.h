@@ -39,7 +39,7 @@ private:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-    std::unique_ptr<OpenGLShape> m_sphere;
+    std::vector<std::shared_ptr<OpenGLShape>> m_spheres;
     /** ID for the shader program. */
     GLuint m_program;
     GLuint m_phongprogram;
