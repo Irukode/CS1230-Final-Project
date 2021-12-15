@@ -36,14 +36,17 @@ struct miscData{
     vec4 intersectW;
     vec4 normalW;
     bool intersects;
+    float t;
+    float normal;
 };
 
 Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
 Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
 
-bool intersectSphere(vec4 d, vec4 e, out float t, out vec4 normal, float minT)
+miscData intersectSphere(vec4 d, vec4 e, float minT)
 {
-    bool intersects = false;
+    miscData data;
+    data.intersects = false;
     float a = pow(d.x, 2.0f) + pow(d.y, 2.0f) + pow(d.z, 2.0f);
     float b = 2.0f * (e.x*d.x  + e.y*d.y +  e.z*d.z);
     float c = pow(e.x, 2.0f) + pow(e.y, 2.0f) + pow(e.z, 2.0f) - 0.25f;
@@ -53,24 +56,24 @@ bool intersectSphere(vec4 d, vec4 e, out float t, out vec4 normal, float minT)
         float tPlus = (-b + sqrt(disc))/ (2*a);
         if(tPlus<minT && tPlus >= 0){
             tTemp = tPlus;
-            intersects = true;
+            data.intersects = true;
             vec4 intersect1 = e+tPlus*d;
-            normal = normalize(vec4(2*intersect1.x, 2*intersect1.y, 2*intersect1.z, 0));
+            data.normal = normalize(vec4(2*intersect1.x, 2*intersect1.y, 2*intersect1.z, 0));
         }
         if(disc>=0){
             float tMinus = (-b - sqrt(disc))/ (2*a);
-            if(tMinus<t && tMinus >= 0){
+            if(tMinus<minT && tMinus >= 0){
                 tTemp = tMinus;
-                intersects = true;
+                data.intersects = true;
                 vec4 intersect2 = e+tPlus*d;
-                normal = normalize(vec4(2*intersect2.x, 2*intersect2.y, 2*intersect2.z, 0));
+                data.normal = normalize(vec4(2*intersect2.x, 2*intersect2.y, 2*intersect2.z, 0));
             }
         }
-        if(intersects){
-            t = tTemp;
+        if(data.intersects){
+            data.t = tTemp;
         }
     }
-    return intersects;
+    return data;
 }
 
 //intersect cube
@@ -142,19 +145,19 @@ miscData intersect(vec4 d, vec4 e) {
     miscData data;
     float t = 100000.f;
     vec4 normal;
-    vec4 normal1;
     data.intersects = false;
+    bool intersection = false;
     for (int i = 0; i < numSpheres; i++){ // for each Sphere
-        float t1;
         mat4 matTransformation = Spheres;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        if(intersectSphere(matTransformation*d, matTransformation*e, t1, normal1, t)){
-            t = t1;
-            normal = normal1;
-            data.intersects = true;
+        data = intersectSphere(matTransformation*d, matTransformation*e, t);
+        if(data.intersects){
+            t = data.t;
+            normal = data.normal;
+            intersection = true;
         }
     }
-    if(t != 100000.f){
+    if(intersection){
         data.intersectW = e+t*d;
         data.normalW = normalize(inverse(Spheres)*normal);
     }
