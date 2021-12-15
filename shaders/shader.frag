@@ -48,6 +48,11 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
 {
     miscData data;
     data.intersects = false;
+    data.intersectW = vec4(0.f);
+    data.matTransformation = mat4(0.f);
+    data.normal = vec4(0.f);
+    data.normalW = vec4(0.f);
+    data.t = minT;
     float a = pow(d.x, 2.0f) + pow(d.y, 2.0f) + pow(d.z, 2.0f);
     float b = 2.0f * (e.x*d.x  + e.y*d.y +  e.z*d.z);
     float c = pow(e.x, 2.0f) + pow(e.y, 2.0f) + pow(e.z, 2.0f) - 0.25f;
@@ -230,15 +235,15 @@ void main(){
     //current pixel given from quad.vert
 //    float x = Position.x;
 //    float y = Position.y;
-//    float x = gl_FragCoord.x - uResolution.x/2.0;
-//    float y = gl_FragCoord.y - uResolution.y/2.0;
-//    vec4 view = vec4(x, y, -1.f, 1.f);
+    float x = gl_FragCoord.x - uResolution.x/2.0;
+    float y = gl_FragCoord.y - uResolution.y/2.0;
+    vec4 view = vec4(x, y, -1.f, 1.f);
 //    transform to world space
-//    view = cam2world*view;
+    view = cam2world*view;
 
     vec4 e = cam2world*eye;
-//    vec4 d = normalize(view-eye);
-    vec4 d = normalize(direction);
+    vec4 d = normalize(view-eye);
+//    vec4 d = normalize(direction);
     vec4 color = raytrace(d,e);
 
     fragColor = color;
