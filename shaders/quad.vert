@@ -13,6 +13,6 @@ out vec4 Position;
 void main() {
     uv = inUV;
     gl_Position = vec4(position, 1.0);
-    direction = inverse(view) * gl_Position - camera;
+    direction = inverse(view) * (gl_Position - camera);
     Position = gl_Position;
 }
