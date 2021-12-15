@@ -110,8 +110,8 @@ void View::paintGL() {
 //        m_spheres[i]->draw();
 //    }
 //=======
-//    glViewport(0,0,m_width, m_height);
-//    m_sphere->draw();
+    glViewport(0,0,m_width, m_height);
+    m_sphere->draw();
 //>>>>>>> d9e1df2740af00a86f9f9d5218d38c84148d10dd
 
     m_blurFBO1->unbind();
