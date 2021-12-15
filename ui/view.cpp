@@ -70,6 +70,10 @@ void View::initializeGL() {
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
+    m_sphere = std::make_unique<OpenGLShape>();
+    m_sphere->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
+    m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
+    m_sphere->buildVAO();
 //    std::shared_ptr<OpenGLShape> sphere1;
 //    m_spheres.push_back(sphere1);
 //    m_spheres[0] = std::make_unique<OpenGLShape>();
@@ -114,7 +118,12 @@ void View::paintGL() {
     glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
     glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
 
-//    m_blurFBO1->unbind();
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
+//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
+
+    glViewport(0,0,m_width, m_height);
+
     glUseProgram(m_textureProgram);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //    m_blurFBO1->getColorAttachment(0).bind();
