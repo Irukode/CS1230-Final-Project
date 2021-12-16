@@ -14,12 +14,6 @@ bool inArea(float cX, float cY) {
     return (sqrt(cX*cX + cY*cY) < 100.0);
 }
 
-//void main() {
-//    fragColor = vec4(uv.x, uv.y,
-//                     0, 1);
-//}
-
-// What does this draw? (assume entire screen is rendered)
 void main() {
     float cX = gl_FragCoord.x - uResolution.x/2.0f;
     float cY = gl_FragCoord.y - uResolution.y/2.0f;

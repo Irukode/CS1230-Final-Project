@@ -47,15 +47,6 @@ void View::initializeGL() {
     // context and all OpenGL calls have no effect.
     ResourceLoader::initializeGlew();
 
-    //initialize glew
-//    glewExperimental = GL_TRUE;
-//    GLenum err = glewInit();
-//    if (GLEW_OK != err) {
-//        /* Problem: glewInit failed, something is seriously wrong. */
-//        std::cerr << "Something is very wrong, glew initialization failed." << std::endl;
-//    }
-//    std::cout << "Using GLEW " <<  glewGetString( GLEW_VERSION ) << std::endl;
-
     // Start a timer that will try to get 60 frames per second (the actual
     // frame rate depends on the operating system and other running programs)
     m_time.start();
@@ -66,8 +57,6 @@ void View::initializeGL() {
 
     // Creates the shader program that will be used for drawing.
     m_program = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":shaders/default.frag");
-//    m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
-//    m_textureProgram = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":/shaders/texture.frag");
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
@@ -75,12 +64,6 @@ void View::initializeGL() {
     m_sphere->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
     m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
     m_sphere->buildVAO();
-//    std::shared_ptr<OpenGLShape> sphere1;
-//    m_spheres.push_back(sphere1);
-//    m_spheres[0] = std::make_unique<OpenGLShape>();
-//    m_spheres[0]->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
-//    m_spheres[0]->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
-//    m_spheres[0]->buildVAO();
 
     std::vector<GLfloat> quadData = {-1.f, 1.f, 0.f, 0.f, 1.f,
                                     -1.f, -1.f, 0.f, 0.f, 0.f,
@@ -105,11 +88,6 @@ void View::initializeGL() {
     m_sphereTrans[5] = glm::translate(glm::vec3(0,0,1.1)) * glm::scale(glm::vec3(.25, .25, .25))  * m_sphereTrans[5];
     m_sphereTrans[6] = glm::translate(glm::vec3(0,0,-1.1)) * glm::scale(glm::vec3(.25, .25, .25))  * m_sphereTrans[6];
 
-    //    glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-//    glFrontFace(GL_CCW);
-
 }
 
 void View::paintGL() {
@@ -131,47 +109,23 @@ void View::paintGL() {
     }
     glm::vec4 camera = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec2 uResolution(m_width, m_height);
-//    glm::mat4 cubeTrans(glm::scale(glm::vec3(30,30,30)));
     glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
     glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
     glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
     glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), max_spheres, GL_FALSE, glm::value_ptr(m_sphereTrans[0]));
-//    glUniformMatrix4fv(glGetUniformLocation(m_program, "cubeTrans"), 1, GL_FALSE, glm::value_ptr(cubeTrans));
     rebuildMatrices();
-
-//    glUseProgram(m_textureProgram);
-//    glm::mat4 m = glm::mat4(1.f);
-//    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
-//    glm::vec2 uResolution(m_width, m_height);
-//    glUniform2fv(glGetUniformLocation(m_textureProgram, "uResolution"), 1, glm::value_ptr(uResolution));
-//    glUniform4fv(glGetUniformLocation(m_textureProgram, "camera"), 1, glm::value_ptr(camera));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-//    glUniformMatrix4fv(glGetUniformLocation(m_textureProgram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
-
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "model"), 1, GL_FALSE, glm::value_ptr(m));
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "view"), 1, GL_FALSE, glm::value_ptr(m_view));
-//    glUniformMatrix4fv(glGetUniformLocation(m_phongprogram, "projection"), 1, GL_FALSE, glm::value_ptr(m_projection));
 
     glViewport(0,0,m_width, m_height);
 
-    //glUseProgram(m_textureProgram);
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     m_quad->draw();
-    //m_sphere->draw();
     glUseProgram(0);
 }
 
 void View::resizeGL(int w, int h) {
-//    float ratio = static_cast<QGuiApplication *>(QCoreApplication::instance())->devicePixelRatio();
-//    w = static_cast<int>(w / ratio);
-//    h = static_cast<int>(h / ratio);
     m_width = w;
     m_height = h;
 
-//    m_blurFBO1 = std::make_unique<FBO>(1, FBO::DEPTH_STENCIL_ATTACHMENT::DEPTH_ONLY, m_width, m_height, TextureParameters::WRAP_METHOD::CLAMP_TO_EDGE);
     rebuildMatrices();
-    //glViewport(0, 0, w, h);
 }
 
 /// Mouse interaction code below.
@@ -200,24 +154,6 @@ void View::rebuildMatrices() {
     m_projection = glm::perspective(0.8f, (float)width()/height(), 0.1f, 100.f);
     update();
 }
-
-//void View::mouseMoveEvent(QMouseEvent *event) {
-//    // This starter code implements mouse capture, which gives the change in
-//    // mouse position since the last mouse movement. The mouse needs to be
-//    // recentered after every movement because it might otherwise run into
-//    // the edge of the screen, which would stop the user from moving further
-//    // in that direction. Note that it is important to check that deltaX and
-//    // deltaY are not zero before recentering the mouse, otherwise there will
-//    // be an infinite loop of mouse move events.
-//    if(m_captureMouse) {
-//        int deltaX = event->x() - width() / 2;
-//        int deltaY = event->y() - height() / 2;
-//        if (!deltaX && !deltaY) return;
-//        QCursor::setPos(mapToGlobal(QPoint(width() / 2, height() / 2)));
-
-//        // TODO: Handle mouse movements here
-//    }
-//}
 
 void View::mouseReleaseEvent(QMouseEvent *event) {
 
