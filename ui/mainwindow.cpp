@@ -32,12 +32,12 @@ void MainWindow::dataBind() {
     m_bindings.push_back(_b); \
     assert(connect(_b, SIGNAL(dataChanged()), this, SLOT(settingsChanged()))); \
 }
-    BIND(FloatBinding::bindSliderAndTextbox(
-             ui->radiusSlider, ui->radiusEdit, settings.sphereRadius, 0.f, 5.f));
-    BIND(FloatBinding::bindSliderAndTextbox(
-             ui->massSlider, ui->massEdit, settings.sphereMass, 0.f, 10.f));
-    BIND(FloatBinding::bindSliderAndTextbox(
-             ui->bouncinessSlider, ui->bouncinessEdit, settings.sphereBounciness, 0.f, 1.f));
+//    BIND(FloatBinding::bindSliderAndTextbox(
+//             ui->radiusSlider, ui->radiusEdit, settings.sphereRadius, 0.f, 5.f));
+//    BIND(FloatBinding::bindSliderAndTextbox(
+//             ui->massSlider, ui->massEdit, settings.sphereMass, 0.f, 10.f));
+//    BIND(FloatBinding::bindSliderAndTextbox(
+//             ui->bouncinessSlider, ui->bouncinessEdit, settings.sphereBounciness, 0.f, 1.f));
 
 
 #undef BIND
