@@ -14,8 +14,8 @@ in vec4 direction;
 uniform mat4 cam2world;
 uniform vec4 eye; // vec4(0,0,0,1)
 uniform vec2 uResolution;
-const int numSpheres = 1; //for now
-uniform mat4 Spheres;//for now, needs to be array
+const int NUM_SPHERES = 7;
+uniform mat4 Spheres[NUM_SPHERES];
 
 struct Material{
     vec4 diffuse;
@@ -176,8 +176,8 @@ miscData intersect(vec4 d, vec4 e) {
     data.t = 100000.f;
     data.normal = vec4(0.f);
     data.intersects = false;
-    for (int i = 0; i < numSpheres; i++){ // for each Sphere
-        mat4 matTrans = Spheres;
+    for (int i = 0; i < NUM_SPHERES; i++){ // for each Sphere
+        mat4 matTrans = Spheres[i];
         miscData tempData;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
         tempData = intersectSphere(inverse(matTrans)*d, inverse(matTrans)*e, data.t);

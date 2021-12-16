@@ -16,6 +16,8 @@
 #include "shapes/openglshape.h"
 #include "gl/datatype/FBO.h"
 
+const int max_spheres = 7;
+
 class View : public QGLWidget {
     Q_OBJECT
 
@@ -46,6 +48,8 @@ private:
     std::unique_ptr<OpenGLShape> m_sphere;
     std::unique_ptr<FBO> m_blurFBO1;
     std::unique_ptr<FBO> m_blurFBO2;
+
+    std::unique_ptr<glm::mat4[]> m_sphereTrans;
     /** ID for the shader program. */
     GLuint m_program;
     GLuint m_phongprogram;

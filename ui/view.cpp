@@ -12,6 +12,7 @@
 #include "Settings.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <glm/gtx/string_cast.hpp>
 
 View::View(QWidget *parent) : QGLWidget(ViewFormat(), parent),
     m_time(), m_timer(), m_captureMouse(false), m_width(width()), m_height(height()),
@@ -91,7 +92,16 @@ void View::initializeGL() {
     m_quad->setAttribute(ShaderAttrib::TEXCOORD0, 2, 3*sizeof(GLfloat), VBOAttribMarker::DATA_TYPE::FLOAT, false);
     m_quad->buildVAO();
 
-
+    m_sphereTrans = std::make_unique<glm::mat4[]>(max_spheres);
+    for(int i = 0; i < max_spheres; i++) {
+        m_sphereTrans[i] = glm::mat4(1.f);
+    }
+    m_sphereTrans[1] = glm::translate(glm::vec3(0,1.25,0)) * m_sphereTrans[1];
+    m_sphereTrans[2] = glm::translate(glm::vec3(0,-1.25,0)) * m_sphereTrans[2];
+    m_sphereTrans[3] = glm::translate(glm::vec3(1.25,0,0)) * m_sphereTrans[3];
+    m_sphereTrans[4] = glm::translate(glm::vec3(-1.25,0,0)) * m_sphereTrans[4];
+    m_sphereTrans[5] = glm::translate(glm::vec3(0,0,1.25)) * m_sphereTrans[5];
+    m_sphereTrans[6] = glm::translate(glm::vec3(0,0,-1.25)) * m_sphereTrans[6];
 //    glEnable(GL_DEPTH_TEST);
 //    glEnable(GL_CULL_FACE);
 //    glCullFace(GL_BACK);
@@ -109,7 +119,7 @@ void View::paintGL() {
     glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
     glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
     glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
-    glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), 1, GL_FALSE, glm::value_ptr(m));
+    glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), max_spheres, GL_FALSE, glm::value_ptr(m_sphereTrans[0]));
     rebuildMatrices();
 
 //    glUseProgram(m_textureProgram);
