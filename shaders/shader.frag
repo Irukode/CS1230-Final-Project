@@ -41,6 +41,13 @@ struct miscData{
     mat4 matTransformation;
 };
 
+struct Camera
+{
+    vec3 position;
+    vec3 direction;
+    float zoom;
+} camera;
+
 Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
 Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
 
@@ -235,21 +242,20 @@ vec4 raytrace(vec4 d, vec4 e){
 
 void main(){
     //current pixel given from quad.vert
-//    float x = Position.x;
-//    float y = Position.y;
-    float x = gl_FragCoord.x - uResolution.x/2.0;
-    float y = gl_FragCoord.y - uResolution.y/2.0;
-    vec4 viewplane = vec4(x, y, -1.f, 1.f);
-//    transform to world space
-    viewplane = cam2world * viewplane;
+    float x = Position.x;
+    float y = Position.y;
+    float h = uResolution.y;
+    float w = uResolution.x;
+    float heightAdiv2 = tan(radians(45.0f/2.0f));
+    float widthAngle = 2 * atan(w*heightAdiv2, h);
+    float u = 2*tan(widthAngle/2.0f);
+    float v = 2*heightAdiv2;
 
+    vec4 viewplane = vec4(u*x, v*y, -1.f, 1.f);
+    vec4 d = viewplane-eye;
+    d = cam2world*d;
     vec4 e = cam2world * eye;
-    vec4 d = normalize(viewplane - eye);
-//    vec4 d = normalize(direction);
     vec4 color = raytrace(d,e);
-//    vec4 color = vec4(gl_FragCoord.x / uResolution.x,
-//               gl_FragCoord.y / uResolution.y,
-//               0, 1);
 
     fragColor = color;
 }
