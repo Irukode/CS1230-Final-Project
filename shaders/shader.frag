@@ -250,11 +250,11 @@ vec4 raytrace(vec4 d, vec4 e){
     } else {
         color += vec4(0.f);
     }
-    int depth = 3;
+    int depth = 1;
     miscData curData = data;
     for(int i = 0; i < depth; i++){
         vec4 reflection = reflect(d, curData.normalW);
-        miscData tempreflection = intersect(reflection, curData.intersectW*0.0001f*curData.normalW);
+        miscData tempreflection = intersect(reflection, curData.intersectW+0.0001f*curData.normalW);
         if(tempreflection.intersects){
             color+=calculateLighting(tempreflection.intersectW, reflection, tempreflection.normalW);
         }
