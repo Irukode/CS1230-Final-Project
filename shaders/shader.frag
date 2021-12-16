@@ -24,6 +24,7 @@ struct Material{
     float shininess;
 };
 
+const int NUM_LIGHTS = 7;
 struct Light {
     vec4 position;
     vec4 color;
@@ -57,10 +58,30 @@ Material getmat(){
     return color;
 }
 
-Light getLight(){
+Light getLight0(){
     Light light;
-    light.position = vec4(-10.f, 10.f, 10.f, 0.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 0.f);
+    light.position = vec4(-100.f, 100.f, 100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
+    light.constant =  1.f;
+    light.linear = 0.09f;
+    light.quadratic = 0.032f;
+    return light;
+}
+
+Light getLight1(){
+    Light light;
+    light.position = vec4(100.f, -100.f, 100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
+    light.constant =  1.f;
+    light.linear = 0.09f;
+    light.quadratic = 0.032f;
+    return light;
+}
+
+Light getLight2(){
+    Light light;
+    light.position = vec4(-100.f, 100.f, -100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -105,70 +126,73 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
     return data;
 }
 
-//intersect cube
-//bool intersectCube(vec4 eye, vec4 d){
-//    bool intersection = false;
+miscData intersectCube(vec4 eye, vec4 d){
+    miscData data;
+    data.intersects = false;
+    data.intersectW = vec4(0.f);
+    data.matTransformation = mat4(0.f);
+    data.normal = vec4(0.f);
+    data.normalW = vec4(0.f);
+    if(d.y!=0){
+        float t1 = (0.5f-eye.y)/d.y;
+        vec4 intersect1 = eye+(t1*d);
+        float t2 = (-0.5f-eye.y)/d.y;
+        vec4 intersect2 = eye+(t2*d);
+        if(abs(intersect1.x)<=0.5f && abs(intersect1.z) <= 0.5f){
+            if(t1>=0 && t1<t2){
+                data.t = t1;
+                data.normal = vec4(0,1,0,0);
+            }
+        }
 
-//    if(d.y!=0){
-//        float t1 = (0.5f-eye.y)/d.y;
-//        vec4 intersect1 = eye+(t1*d);
-//        float t2 = (-0.5f-eye.y)/d.y;
-//        vec4 intersect2 = eye+(t2*d);
-//        if(abs(intersect1.x)<=0.5f && abs(intersect1.z) <= 0.5f){
-//            if(t1>=0 && t1<t2){
-//                c.mT = t1;
-//                c.normal = vec4(0,1,0,0);
-//            }
-//        }
+        if(abs(intersect2.x)<=0.5f && abs(intersect2.z) <= 0.5f){
+            if(t2<t1 && t2>=0){
+                data.t = t2;
+                data.normal = vec4(0,-1,0,0);
+            }
+        }
+    }
 
-//        if(abs(intersect2.x)<=0.5f && abs(intersect2.z) <= 0.5f){
-//            if(t2<t1 && t2>=0){
-//                c.mT = t2;
-//                c.normal = vec4(0,-1,0,0);
-//            }
-//        }
-//    }
+    if(d.x!=0){
+        float t3 = (0.5f-eye.x)/d.x;
+        vec4 intersect3 = eye+(t3*d);
+        float t4 = (-0.5f-eye.x)/d.x;
+        vec4 intersect4 = eye+(t4*d);
+        if(abs(intersect3.y)<=0.5f && abs(intersect3.z) <= 0.5f){
+            if(t3<t4 && t3>=0){
+                data.t = t3;
+                data.normal = vec4(1,0,0,0);
+            }
+        }
 
-//    if(d.x!=0){
-//        float t3 = (0.5f-eye.x)/d.x;
-//        vec4 intersect3 = eye+(t3*d);
-//        float t4 = (-0.5f-eye.x)/d.x;
-//        vec4 intersect4 = eye+(t4*d);
-//        if(abs(intersect3.y)<=0.5f && abs(intersect3.z) <= 0.5f){
-//            if(t3<t4 && t3>=0){
-//                c.mT = t3;
-//                c.normal = vec4(1,0,0,0);
-//            }
-//        }
+        if(abs(intersect4.y)<=0.5f && abs(intersect4.z) <= 0.5f){
+            if(t4<t3 && t4>=0){
+                data.t = t4;
+                data.normal = vec4(-1,0,0,0);
+            }
+        }
+    }
 
-//        if(abs(intersect4.y)<=0.5f && abs(intersect4.z) <= 0.5f){
-//            if(t4<t3 && t4>=0){
-//                c.mT = t4;
-//                c.normal = vec4(-1,0,0,0);
-//            }
-//        }
-//    }
+    if(d.z!=0){
+        float t5 = (0.5f-eye.z)/d.z;
+        vec4 intersect5 = eye+(t5*d);
+        float t6 = (-0.5f-eye.z)/d.z;
+        vec4 intersect6 = eye+(t6*d);
+        if(abs(intersect5.y)<=0.5f && abs(intersect5.x) <= 0.5f){
+            if(t5<t6 && t5>=0){
+                data.t = t5;
+                data.normal = vec4(0,0,1,0);
+            }
+        }
 
-//    if(d.z!=0){
-//        float t5 = (0.5f-eye.z)/d.z;
-//        vec4 intersect5 = eye+(t5*d);
-//        float t6 = (-0.5f-eye.z)/d.z;
-//        vec4 intersect6 = eye+(t6*d);
-//        if(abs(intersect5.y)<=0.5f && abs(intersect5.x) <= 0.5f){
-//            if(t5<t6 && t5>=0){
-//                c.mT = t5;
-//                c.normal = vec4(0,0,1,0);
-//            }
-//        }
-
-//        if(abs(intersect6.y)<=0.5f && abs(intersect6.x) <= 0.5f){
-//            if(t6<t5 && t6>=0){
-//                c.mT = t6;
-//                c.normal = vec4(0,0,-1,0);
-//            }
-//        }
-//    }
-//}
+        if(abs(intersect6.y)<=0.5f && abs(intersect6.x) <= 0.5f){
+            if(t6<t5 && t6>=0){
+                data.t = t6;
+                data.normal = vec4(0,0,-1,0);
+            }
+        }
+    }
+}
 
 miscData intersect(vec4 d, vec4 e) {
     miscData data;
@@ -201,36 +225,45 @@ miscData intersect(vec4 d, vec4 e) {
 vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
     vec4 color;
     Material silver = getmat();
-    Light light = getLight();
     vec4 diffuseColor = kd*silver.diffuse;
     vec4 specularColor = ks*silver.specular;
     vec4 ambientColor = ka*silver.ambient;
+    for(int i = 0; i<NUM_LIGHTS; i++){
+        //lighting stuff
+        Light light;
+        if(i == 0){
+            light = getLight0();
+        }
+        else if(i == 1){
+            light = getLight1();
+        }
+        else{
+            light = getLight2();
+        }
+        float NL = 0.0f;
+        float refdot = 0.0f;
+        float dist = distance(light.position, intersectW);
+        float attenuation = min(1.0f/(light.constant+(light.linear*dist)+(light.quadratic*pow(dist, 2))), 1.0f);
+        vec4 direction = normalize(light.position - intersectW);
+        float dotp = dot(normalW, direction);
+        NL = min(max(dotp, 0.0f), 1.0f);
+        vec4 ref = direction - 2.0f * normalW * NL;
+        refdot = dot(normalize(ref), normalize(d));
+        refdot = max(0.0f, refdot);
 
-    //lighting stuff
-    float NL = 0.0f;
-    float refdot = 0.0f;
-    float dist = distance(light.position, intersectW);
-    float attenuation = min(1.0f/(light.constant+(light.linear*dist)+(light.quadratic*pow(dist, 2))), 1.0f);
-    vec4 direction = normalize(light.position - intersectW);
-    float dotp = dot(normalW, direction);
-    NL = min(max(dotp, 0.0f), 1.0f);
-    vec4 ref = direction - 2.0f * normalW * NL;
-    refdot = dot(normalize(ref), normalize(d));
-    refdot = max(0.0f, refdot);
-
-    bool shadows = true;
-    if(shadows){
-        vec4 p = intersectW+0.00001f*normalW;
-        vec4 tempnormal;
-        miscData d = intersect(direction, p);
-        if(!d.intersects){
-            color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+        bool shadows = true;
+        if(shadows){
+            vec4 p = intersectW+0.00001f*normalW;
+            vec4 tempnormal;
+            miscData d = intersect(direction, p);
+            if(!d.intersects){
+                color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+            }
+        }
+        else{
+                color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
         }
     }
-    else{
-            color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-    }
-
     return color;
 }
 
