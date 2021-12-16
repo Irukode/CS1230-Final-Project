@@ -65,8 +65,8 @@ void View::initializeGL() {
 
     // Creates the shader program that will be used for drawing.
     m_program = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":shaders/default.frag");
-    m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
-    m_textureProgram = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":/shaders/texture.frag");
+//    m_phongprogram = ResourceLoader::createShaderProgram(":shaders/phong.vert", ":/shaders/phong.frag");
+//    m_textureProgram = ResourceLoader::createShaderProgram(":shaders/quad.vert", ":/shaders/texture.frag");
 
     // Initialize sphere with radius 0.5 centered at origin.
     std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
@@ -104,7 +104,7 @@ void View::paintGL() {
     // TODO: Implement the demo rendering here
     glUseProgram(m_program);
     glm::mat4 m = glm::mat4(1.f);
-    glm::vec4 camera = m_view * glm::vec4(0.f, 0.f, 0.f, 1.f);
+    glm::vec4 camera = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec2 uResolution(m_width, m_height);
     glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
     glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));

@@ -12,7 +12,7 @@ in vec4 direction;
 
 //Do Raytracing in here
 uniform mat4 cam2world;
-uniform vec4 eye; //view*vec4(0,0,0,1)
+uniform vec4 eye; // vec4(0,0,0,1)
 uniform vec2 uResolution;
 const int numSpheres = 1; //for now
 uniform mat4 Spheres;//for now, needs to be array
@@ -56,22 +56,22 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
     float a = pow(d.x, 2.0f) + pow(d.y, 2.0f) + pow(d.z, 2.0f);
     float b = 2.0f * (e.x*d.x  + e.y*d.y +  e.z*d.z);
     float c = pow(e.x, 2.0f) + pow(e.y, 2.0f) + pow(e.z, 2.0f) - 0.25f;
-    float disc = pow(a,2.f) - (4*a*c);
+    float disc = pow(b,2.f) - (4*a*c);
     if(disc>=0){
         float tTemp = 0;
         float tPlus = (-b + sqrt(disc))/ (2*a);
-        if(tPlus<minT && tPlus >= 0){
+        if(tPlus < minT && tPlus > 0){
             tTemp = tPlus;
             data.intersects = true;
-            vec4 intersect1 = e+tPlus*d;
+            vec4 intersect1 = e+tTemp*d;
             data.normal = normalize(vec4(2*intersect1.x, 2*intersect1.y, 2*intersect1.z, 0));
         }
         if(disc>=0){
             float tMinus = (-b - sqrt(disc))/ (2*a);
-            if(tMinus<minT && tMinus >= 0){
+            if(tMinus < minT && tMinus > 0){
                 tTemp = tMinus;
                 data.intersects = true;
-                vec4 intersect2 = e+tPlus*d;
+                vec4 intersect2 = e+tTemp*d;
                 data.normal = normalize(vec4(2*intersect2.x, 2*intersect2.y, 2*intersect2.z, 0));
             }
         }
@@ -156,10 +156,10 @@ miscData intersect(vec4 d, vec4 e) {
         mat4 matTrans = Spheres;
         miscData tempData;
         //intersectSphere(d,eye, i, ); //might need to add transformation for object space
-        tempData = intersectSphere(matTrans*d, matTrans*e, data.t);
+        tempData = intersectSphere(inverse(matTrans)*d, inverse(matTrans)*e, data.t);
         if(tempData.intersects){
 
-            if(tempData.t<data.t){
+            if(tempData.t < data.t){
                 data.t = tempData.t;
                 data.normal = tempData.normal;
                 data.intersects = true;
@@ -170,8 +170,8 @@ miscData intersect(vec4 d, vec4 e) {
     }
 
     if(data.intersects){
-        data.intersectW = e+data.t*d;
-        data.normalW = normalize(inverse(data.matTransformation)*data.normal);
+        data.intersectW = e + data.t * d;
+        data.normalW = normalize(inverse(data.matTransformation) * data.normal);
     }
     return data;
 }
@@ -222,6 +222,8 @@ vec4 raytrace(vec4 d, vec4 e){
     miscData data = intersect(d, e);
     if(data.intersects){
         color = vec4(1.0f, 0.0f, 0.f, 1.0f);
+    } else {
+        color = vec4(1.f);
     }
 //    int depth = 3;
 //    for(int i = 0; i < depth; i++){
@@ -237,14 +239,17 @@ void main(){
 //    float y = Position.y;
     float x = gl_FragCoord.x - uResolution.x/2.0;
     float y = gl_FragCoord.y - uResolution.y/2.0;
-    vec4 view = vec4(x, y, -1.f, 1.f);
+    vec4 viewplane = vec4(x, y, -1.f, 1.f);
 //    transform to world space
-    view = cam2world*view;
+    viewplane = cam2world * viewplane;
 
-    vec4 e = cam2world*eye;
-    vec4 d = normalize(view-eye);
+    vec4 e = cam2world * eye;
+    vec4 d = normalize(viewplane - eye);
 //    vec4 d = normalize(direction);
     vec4 color = raytrace(d,e);
+//    vec4 color = vec4(gl_FragCoord.x / uResolution.x,
+//               gl_FragCoord.y / uResolution.y,
+//               0, 1);
 
     fragColor = color;
 }
