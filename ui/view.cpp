@@ -93,16 +93,19 @@ void View::initializeGL() {
     m_quad->buildVAO();
 
     m_sphereTrans = std::make_unique<glm::mat4[]>(max_spheres);
+    m_sphereBool = std::make_unique<bool[]>(max_spheres);
     for(int i = 0; i < max_spheres; i++) {
         m_sphereTrans[i] = glm::mat4(1.f);
+        m_sphereBool[i] = true;
     }
-    m_sphereTrans[1] = glm::translate(glm::vec3(0,1.25,0)) * m_sphereTrans[1];
-    m_sphereTrans[2] = glm::translate(glm::vec3(0,-1.25,0)) * m_sphereTrans[2];
-    m_sphereTrans[3] = glm::translate(glm::vec3(1.25,0,0)) * m_sphereTrans[3];
-    m_sphereTrans[4] = glm::translate(glm::vec3(-1.25,0,0)) * m_sphereTrans[4];
-    m_sphereTrans[5] = glm::translate(glm::vec3(0,0,1.25)) * m_sphereTrans[5];
-    m_sphereTrans[6] = glm::translate(glm::vec3(0,0,-1.25)) * m_sphereTrans[6];
-//    glEnable(GL_DEPTH_TEST);
+    m_sphereTrans[1] = glm::translate(glm::vec3(0,1.1,0)) * glm::scale(glm::vec3(.75, .75, .75)) * m_sphereTrans[1];
+    m_sphereTrans[2] = glm::translate(glm::vec3(0,-1.1,0)) * glm::scale(glm::vec3(.75, .75, .75))  * m_sphereTrans[2];
+    m_sphereTrans[3] = glm::translate(glm::vec3(1.1,0,0)) * glm::scale(glm::vec3(.5, .5, .5))  * m_sphereTrans[3];
+    m_sphereTrans[4] = glm::translate(glm::vec3(-1.1,0,0)) * glm::scale(glm::vec3(.5, .5, .5))  * m_sphereTrans[4];
+    m_sphereTrans[5] = glm::translate(glm::vec3(0,0,1.1)) * glm::scale(glm::vec3(.25, .25, .25))  * m_sphereTrans[5];
+    m_sphereTrans[6] = glm::translate(glm::vec3(0,0,-1.1)) * glm::scale(glm::vec3(.25, .25, .25))  * m_sphereTrans[6];
+
+    //    glEnable(GL_DEPTH_TEST);
 //    glEnable(GL_CULL_FACE);
 //    glCullFace(GL_BACK);
 //    glFrontFace(GL_CCW);
@@ -113,13 +116,27 @@ void View::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // TODO: Implement the demo rendering here
     glUseProgram(m_program);
-    glm::mat4 m = glm::mat4(1.f);
+    for(int i = 0; i < max_spheres; i++) {
+        if(m_sphereTrans[i][0][0] >= 1.0f){
+            m_sphereBool[i] = true;
+        }
+        if(m_sphereTrans[i][0][0] <= .25f){
+            m_sphereBool[i] = false;
+        }
+        if(m_sphereBool[i]) {
+            m_sphereTrans[i] = glm::scale(glm::vec3(.99,.99,.99)) * m_sphereTrans[i];
+        } else {
+            m_sphereTrans[i] = glm::scale(glm::vec3(1.01, 1.01, 1.01)) * m_sphereTrans[i];
+        }
+    }
     glm::vec4 camera = glm::vec4(0.f, 0.f, 0.f, 1.f);
     glm::vec2 uResolution(m_width, m_height);
+//    glm::mat4 cubeTrans(glm::scale(glm::vec3(30,30,30)));
     glUniformMatrix4fv(glGetUniformLocation(m_program, "cam2world"), 1, GL_FALSE, glm::value_ptr(glm::inverse(m_view)));
     glUniform4fv(glGetUniformLocation(m_program, "eye"), 1, glm::value_ptr(camera));
     glUniform2fv(glGetUniformLocation(m_program, "uResolution"), 1, glm::value_ptr(uResolution));
     glUniformMatrix4fv(glGetUniformLocation(m_program, "Spheres"), max_spheres, GL_FALSE, glm::value_ptr(m_sphereTrans[0]));
+//    glUniformMatrix4fv(glGetUniformLocation(m_program, "cubeTrans"), 1, GL_FALSE, glm::value_ptr(cubeTrans));
     rebuildMatrices();
 
 //    glUseProgram(m_textureProgram);
