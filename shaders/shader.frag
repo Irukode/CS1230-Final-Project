@@ -48,8 +48,6 @@ struct Camera
     float zoom;
 } camera;
 
-//Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
-//Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
 Material getmat(){
     Material silver;
     silver.ambient = vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
@@ -220,7 +218,7 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
     refdot = dot(normalize(ref), normalize(d));
     refdot = max(0.0f, refdot);
 
-    bool shadows = false;
+    bool shadows = true;
     if(shadows){
         bool intersects = false;
         vec4 p = intersectW+0.0003f*normalW;
@@ -247,20 +245,25 @@ vec4 raytrace(vec4 d, vec4 e){
     vec4 color = vec4(0.f);
     miscData data = intersect(d, e);
     if(data.intersects){
-        color = calculateLighting(data.intersectW, d, data.normalW);
+        color += calculateLighting(data.intersectW, d, data.normalW);
     } else {
-        color = vec4(0.f);
+        color += vec4(0.f);
     }
-//    int depth = 3;
-//    for(int i = 0; i < depth; i++){
-
-//    }
+    int depth = 3;
+    miscData curData = data;
+    for(int i = 0; i < depth; i++){
+        vec4 reflection = reflect(d, curData.normalW);
+        miscData tempreflection = intersect(reflection, curData.intersectW*0.0001f*curData.normalW);
+        if(tempreflection.intersects){
+            color+=calculateLighting(tempreflection.intersectW, reflection, tempreflection.normalW);
+        }
+        curData = tempreflection;
+    }
 
     return color;
 }
 
 void main(){
-    //current pixel given from quad.vert
     float x = Position.x;
     float y = Position.y;
     float h = uResolution.y;
