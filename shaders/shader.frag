@@ -25,7 +25,7 @@ struct Material{
     float shininess;
 };
 
-const int NUM_LIGHTS = 6;
+const int NUM_LIGHTS = 3;
 struct Light {
     vec4 position;
     vec4 color;
