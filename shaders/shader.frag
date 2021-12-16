@@ -71,7 +71,7 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
             if(tMinus < minT && tMinus > 0){
                 tTemp = tMinus;
                 data.intersects = true;
-                vec4 intersect2 = e+tTemp*d;
+                vec4 intersect2 = e+tMinus*d;
                 data.normal = normalize(vec4(2*intersect2.x, 2*intersect2.y, 2*intersect2.z, 0));
             }
         }
