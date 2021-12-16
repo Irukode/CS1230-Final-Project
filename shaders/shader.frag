@@ -61,8 +61,8 @@ Material getmat(){
 
 Light getLight0(){
     Light light;
-    light.position = vec4(-10.f, 0.f, 10.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.position = vec4(100.f, 100.f, 0.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -71,8 +71,8 @@ Light getLight0(){
 
 Light getLight1(){
     Light light;
-    light.position = vec4(10.f, 0.f, -10.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.position = vec4(0.f, 100.f, 100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -81,7 +81,7 @@ Light getLight1(){
 
 Light getLight2(){
     Light light;
-    light.position = vec4(0.f, 10.f, 0.f, 1.f);
+    light.position = vec4(0.f, 100.f, 0.f, 1.f);
     light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
@@ -91,7 +91,6 @@ Light getLight2(){
 
 Light getLight3(){
     Light light;
-<<<<<<< HEAD
     light.position = vec4(-100.f, -100.f, 0.f, 1.f);
     light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
@@ -114,8 +113,6 @@ Light getLight5(){
     Light light;
     light.position = vec4(0.f, -100.f, 0.f, 1.f);
     light.color = vec4(0.3f, 0.3f, 0.3f, 1.f);
-    light.position = vec4(0.f, -10.f, 0.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -160,85 +157,6 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
     return data;
 }
 
-//miscData intersectCube(vec4 eye, vec4 d, float minT){
-//    miscData data;
-//    data.intersects = false;
-//    data.intersectW = vec4(0.f);
-//    data.matTransformation = mat4(0.f);
-//    data.normal = vec4(0.f);
-//    data.normalW = vec4(0.f);
-//    if(d.y!=0){
-//        float t1 = (0.5f-eye.y)/d.y;
-//        vec4 intersect1 = eye+(t1*d);
-//        float t2 = (-0.5f-eye.y)/d.y;
-//        vec4 intersect2 = eye+(t2*d);
-//        if(abs(intersect1.x)<=0.5f && abs(intersect1.z) <= 0.5f){
-//            if(t1>=0 && t1<minT){
-//                minT = t1;
-//                data.normal = vec4(0,-1,0,0);
-//                data.intersects = true;
-//            }
-//        }
-
-//        if(abs(intersect2.x)<=0.5f && abs(intersect2.z) <= 0.5f){
-//            if(t2<minT && t2>=0){
-//                minT = t2;
-//                data.normal = vec4(0,1,0,0);
-//                data.intersects = true;
-//            }
-//        }
-//    }
-
-//    if(d.x!=0){
-//        float t3 = (0.5f-eye.x)/d.x;
-//        vec4 intersect3 = eye+(t3*d);
-//        float t4 = (-0.5f-eye.x)/d.x;
-//        vec4 intersect4 = eye+(t4*d);
-//        if(abs(intersect3.y)<=0.5f && abs(intersect3.z) <= 0.5f){
-//            if(t3<minT && t3>=0){
-//                minT = t3;
-//                data.normal = vec4(-1,0,0,0);
-//                data.intersects = true;
-//            }
-//        }
-
-//        if(abs(intersect4.y)<=0.5f && abs(intersect4.z) <= 0.5f){
-//            if(t4<minT && t4>=0){
-//                minT = t4;
-//                data.normal = vec4(1,0,0,0);
-//                data.intersects = true;
-//            }
-//        }
-//    }
-
-//    if(d.z!=0){
-//        float t5 = (0.5f-eye.z)/d.z;
-//        vec4 intersect5 = eye+(t5*d);
-//        float t6 = (-0.5f-eye.z)/d.z;
-//        vec4 intersect6 = eye+(t6*d);
-//        if(abs(intersect5.y)<=0.5f && abs(intersect5.x) <= 0.5f){
-//            if(t5<minT && t5>=0){
-//                minT = t5;
-//                data.normal = vec4(0,0,-1,0);
-//                data.intersects = true;
-//            }
-//        }
-
-//        if(abs(intersect6.y)<=0.5f && abs(intersect6.x) <= 0.5f){
-//            if(t6<minT && t6>=0){
-//                minT = t6;
-//                data.normal = vec4(0,0,1,0);
-//                data.intersects = true;
-//            }
-//        }
-//    }
-
-//    if(data.intersects){
-//        data.t = minT;
-//    }
-//    return data;
-//}
-
 miscData intersect(vec4 d, vec4 e) {
     miscData data;
     data.t = 100000.f;
@@ -259,16 +177,6 @@ miscData intersect(vec4 d, vec4 e) {
 
         }
     }
-
-//    if(!data.intersects) {
-//        miscData tempData = intersectCube(inverse(cubeTrans) * d, inverse(cubeTrans) * e, data.t);
-//        if(tempData.intersects) {
-//            data.t = tempData.t;
-//            data.normal = tempData.normal;
-//            data.intersects = true;
-//            data.matTransformation = cubeTrans;
-//        }
-//    }
 
     if(data.intersects){
         data.intersectW = e + data.t * d;
