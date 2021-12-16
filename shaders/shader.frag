@@ -24,7 +24,7 @@ struct Material{
     float shininess;
 };
 
-const int NUM_LIGHTS = 4;
+const int NUM_LIGHTS = 6;
 struct Light {
     vec4 position;
     vec4 color;
@@ -54,14 +54,14 @@ Material getmat(){
     color.ambient = vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
     color.diffuse = vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
     color.specular = vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
-    color.shininess = 5.f;
+    color.shininess = 20.f;
     return color;
 }
 
 Light getLight0(){
     Light light;
-    light.position = vec4(-100.f, 0.f, 100.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.position = vec4(100.f, 100.f, 0.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -70,8 +70,8 @@ Light getLight0(){
 
 Light getLight1(){
     Light light;
-    light.position = vec4(100.f, 0.f, -100.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.position = vec4(0.f, 100.f, 100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -81,7 +81,7 @@ Light getLight1(){
 Light getLight2(){
     Light light;
     light.position = vec4(0.f, 100.f, 0.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.color = vec4(0.3f, 0.3f, 0.3f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -90,8 +90,28 @@ Light getLight2(){
 
 Light getLight3(){
     Light light;
+    light.position = vec4(-100.f, -100.f, 0.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
+    light.constant =  1.f;
+    light.linear = 0.09f;
+    light.quadratic = 0.032f;
+    return light;
+}
+
+Light getLight4(){
+    Light light;
+    light.position = vec4(0.f, -100.f, -100.f, 1.f);
+    light.color = vec4(0.1f, 0.1f, 0.1f, 1.f);
+    light.constant =  1.f;
+    light.linear = 0.09f;
+    light.quadratic = 0.032f;
+    return light;
+}
+
+Light getLight5(){
+    Light light;
     light.position = vec4(0.f, -100.f, 0.f, 1.f);
-    light.color = vec4(0.5f, 0.5f, 0.5f, 1.f);
+    light.color = vec4(0.3f, 0.3f, 0.3f, 1.f);
     light.constant =  1.f;
     light.linear = 0.09f;
     light.quadratic = 0.032f;
@@ -132,85 +152,6 @@ miscData intersectSphere(vec4 d, vec4 e, float minT)
         if(data.intersects){
             data.t = tTemp;
         }
-    }
-    return data;
-}
-
-miscData intersectCube(vec4 eye, vec4 d, float minT){
-    miscData data;
-    data.intersects = false;
-    data.intersectW = vec4(0.f);
-    data.matTransformation = mat4(0.f);
-    data.normal = vec4(0.f);
-    data.normalW = vec4(0.f);
-    if(d.y!=0){
-        float t1 = (0.5f-eye.y)/d.y;
-        vec4 intersect1 = eye+(t1*d);
-        float t2 = (-0.5f-eye.y)/d.y;
-        vec4 intersect2 = eye+(t2*d);
-        if(abs(intersect1.x)<=0.5f && abs(intersect1.z) <= 0.5f){
-            if(t1>=0 && t1<minT){
-                minT = t1;
-                data.normal = vec4(0,1,0,0);
-                data.intersects = true;
-            }
-        }
-
-        if(abs(intersect2.x)<=0.5f && abs(intersect2.z) <= 0.5f){
-            if(t2<minT && t2>=0){
-                minT = t2;
-                data.normal = vec4(0,-1,0,0);
-                data.intersects = true;
-            }
-        }
-    }
-
-    if(d.x!=0){
-        float t3 = (0.5f-eye.x)/d.x;
-        vec4 intersect3 = eye+(t3*d);
-        float t4 = (-0.5f-eye.x)/d.x;
-        vec4 intersect4 = eye+(t4*d);
-        if(abs(intersect3.y)<=0.5f && abs(intersect3.z) <= 0.5f){
-            if(t3<minT && t3>=0){
-                minT = t3;
-                data.normal = vec4(1,0,0,0);
-                data.intersects = true;
-            }
-        }
-
-        if(abs(intersect4.y)<=0.5f && abs(intersect4.z) <= 0.5f){
-            if(t4<minT && t4>=0){
-                minT = t4;
-                data.normal = vec4(-1,0,0,0);
-                data.intersects = true;
-            }
-        }
-    }
-
-    if(d.z!=0){
-        float t5 = (0.5f-eye.z)/d.z;
-        vec4 intersect5 = eye+(t5*d);
-        float t6 = (-0.5f-eye.z)/d.z;
-        vec4 intersect6 = eye+(t6*d);
-        if(abs(intersect5.y)<=0.5f && abs(intersect5.x) <= 0.5f){
-            if(t5<minT && t5>=0){
-                minT = t5;
-                data.normal = vec4(0,0,1,0);
-                data.intersects = true;
-            }
-        }
-
-        if(abs(intersect6.y)<=0.5f && abs(intersect6.x) <= 0.5f){
-            if(t6<minT && t6>=0){
-                minT = t6;
-                data.normal = vec4(0,0,-1,0);
-                data.intersects = true;
-            }
-        }
-    }
-
-    if(data.intersects){
-        data.t = minT;
     }
     return data;
 }
@@ -261,8 +202,14 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
         else if(i == 2){
             light = getLight2();
         }
-        else{
+        if(i == 3){
             light = getLight3();
+        }
+        else if(i == 4){
+            light = getLight4();
+        }
+        else if(i == 5){
+            light = getLight5();
         }
         float NL = 0.0f;
         float refdot = 0.0f;
@@ -277,7 +224,7 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
 
         bool shadows = true;
         if(shadows){
-            vec4 p = intersectW+0.00001f*normalW;
+            vec4 p = intersectW+0.0001f*normalW;
             vec4 tempnormal;
             miscData d = intersect(direction, p);
             if(!d.intersects){
@@ -299,19 +246,20 @@ vec4 raytrace(vec4 d, vec4 e){
     if(data.intersects){
         color += calculateLighting(data.intersectW, d, data.normalW);
     } else {
-        color += vec4(0.f);
+        color = vec4(0.f, 0.f, 0.f, 1.f);
     }
     int depth = 1;
     miscData curData = data;
+    vec4 reflectionColor = vec4(0.f);
     for(int i = 0; i < depth; i++){
         vec4 reflection = reflect(d, curData.normalW);
         miscData tempreflection = intersect(reflection, curData.intersectW+0.0001f*curData.normalW);
         if(tempreflection.intersects){
-            color+=calculateLighting(tempreflection.intersectW, reflection, tempreflection.normalW);
+            reflectionColor+=calculateLighting(tempreflection.intersectW, reflection, tempreflection.normalW);
         }
         curData = tempreflection;
     }
-
+    color += reflectionColor;
     color.x = clamp(color.x, 0.0f, 1.0f);
     color.y = clamp(color.y, 0.0f, 1.0f);
     color.z = clamp(color.z, 0.0f, 1.0f);
