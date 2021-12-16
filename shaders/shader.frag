@@ -49,17 +49,17 @@ struct Camera
 } camera;
 
 Material getmat(){
-    Material silver;
-    silver.ambient = vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
-    silver.diffuse = vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
-    silver.specular = vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
-    silver.shininess = 5.f;
-    return silver;
+    Material color;
+    color.ambient = vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
+    color.diffuse = vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
+    color.specular = vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
+    color.shininess = 5.f;
+    return color;
 }
 
 Light getLight(){
     Light light;
-    light.position = vec4(10.f, 30.f, -10.f, 0.f);
+    light.position = vec4(-10.f, 10.f, 10.f, 0.f);
     light.color = vec4(0.5f, 0.5f, 0.5f, 0.f);
     light.constant =  1.f;
     light.linear = 0.09f;
@@ -178,7 +178,6 @@ miscData intersect(vec4 d, vec4 e) {
     for (int i = 0; i < NUM_SPHERES; i++){ // for each Sphere
         mat4 matTrans = Spheres[i];
         miscData tempData;
-        //intersectSphere(d,eye, i, ); //might need to add transformation for object space
         tempData = intersectSphere(inverse(matTrans)*d, inverse(matTrans)*e, data.t);
         if(tempData.intersects){
 
@@ -221,22 +220,17 @@ vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
 
     bool shadows = true;
     if(shadows){
-        bool intersects = false;
-        vec4 p = intersectW+0.0003f*normalW;
+        vec4 p = intersectW+0.00001f*normalW;
         vec4 tempnormal;
-        if(intersect(d, p).intersects){
-            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+        miscData d = intersect(direction, p);
+        if(!d.intersects){
+            color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
         }
-
     }
     else{
-            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+            color += ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
     }
 
-    color.x = clamp(color.x, 0.0f, 1.0f);
-    color.y = clamp(color.y, 0.0f, 1.0f);
-    color.z = clamp(color.z, 0.0f, 1.0f);
-    color = vec4(color.x, color.y, color.z, 1);
     return color;
 }
 
@@ -261,6 +255,10 @@ vec4 raytrace(vec4 d, vec4 e){
         curData = tempreflection;
     }
 
+    color.x = clamp(color.x, 0.0f, 1.0f);
+    color.y = clamp(color.y, 0.0f, 1.0f);
+    color.z = clamp(color.z, 0.0f, 1.0f);
+    color = vec4(color.x, color.y, color.z, 1);
     return color;
 }
 
