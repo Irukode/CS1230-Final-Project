@@ -50,6 +50,7 @@ private:
     std::unique_ptr<FBO> m_blurFBO2;
 
     std::unique_ptr<glm::mat4[]> m_sphereTrans;
+    std::unique_ptr<bool[]> m_sphereBool;
     /** ID for the shader program. */
     GLuint m_program;
     GLuint m_phongprogram;
