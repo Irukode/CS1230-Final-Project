@@ -66,6 +66,7 @@ Light getLight(){
     light.quadratic = 0.032f;
     return light;
 }
+
 miscData intersectSphere(vec4 d, vec4 e, float minT)
 {
     miscData data;
