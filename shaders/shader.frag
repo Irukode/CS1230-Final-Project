@@ -48,9 +48,26 @@ struct Camera
     float zoom;
 } camera;
 
-Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
-Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
+//Material silver = Material(vec4(0.19225f, 0.19225f, 0.19225f, 1.0f), vec4(0.50754f, 0.50754f, 0.50754f, 1.0f), vec4(0.508273f, 0.508273f, 0.508273f, 1.0f), 51.2f);
+//Light light = Light(vec4(10.f, 10.f, 10.f, 0.f), vec4(0.5f, 0.5f, 0.5f, 0.f), 1.f, 0.09f, 0.032f);
+Material getmat(){
+    Material silver;
+    silver.ambient = vec4(0.50754f, 0.50754f, 0.50754f, 1.0f);
+    silver.diffuse = vec4(0.19225f, 0.19225f, 0.19225f, 1.0f);
+    silver.specular = vec4(0.508273f, 0.508273f, 0.508273f, 1.0f);
+    silver.shininess = 5.f;
+    return silver;
+}
 
+Light getLight(){
+    Light light;
+    light.position = vec4(10.f, 30.f, -10.f, 0.f);
+    light.color = vec4(0.5f, 0.5f, 0.5f, 0.f);
+    light.constant =  1.f;
+    light.linear = 0.09f;
+    light.quadratic = 0.032f;
+    return light;
+}
 miscData intersectSphere(vec4 d, vec4 e, float minT)
 {
     miscData data;
@@ -183,44 +200,46 @@ miscData intersect(vec4 d, vec4 e) {
     return data;
 }
 
-//vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
-//    vec4 color;
-//    vec4 diffuseColor = kd*silver.diffuse;
-//    vec4 specularColor = ks*silver.specular;
-//    vec4 ambientColor = ka*silver.ambient;
+vec4 calculateLighting(vec4 intersectW, vec4 d, vec4 normalW){
+    vec4 color;
+    Material silver = getmat();
+    Light light = getLight();
+    vec4 diffuseColor = kd*silver.diffuse;
+    vec4 specularColor = ks*silver.specular;
+    vec4 ambientColor = ka*silver.ambient;
 
-//    //lighting stuff
-//    float NL = 0.0f;
-//    float refdot = 0.0f;
-//    float dist = distance(light.position, intersectW);
-//    float attenuation = min(1.0f/(light.constant+(light.linear*dist)+(light.quadratic*pow(dist, 2))), 1.0f);
-//    vec4 direction = normalize(light.position - intersectW);
-//    float dotp = dot(normalW, direction);
-//    NL = min(max(dotp, 0.0f), 1.0f);
-//    vec4 ref = direction - 2.0f * normalW * NL;
-//    refdot = dot(normalize(ref), normalize(d));
-//    refdot = max(0.0f, refdot);
+    //lighting stuff
+    float NL = 0.0f;
+    float refdot = 0.0f;
+    float dist = distance(light.position, intersectW);
+    float attenuation = min(1.0f/(light.constant+(light.linear*dist)+(light.quadratic*pow(dist, 2))), 1.0f);
+    vec4 direction = normalize(light.position - intersectW);
+    float dotp = dot(normalW, direction);
+    NL = min(max(dotp, 0.0f), 1.0f);
+    vec4 ref = direction - 2.0f * normalW * NL;
+    refdot = dot(normalize(ref), normalize(d));
+    refdot = max(0.0f, refdot);
 
-//    bool shadows = true;
-//    if(shadows){
-//        bool intersects = false;
-//        vec4 p = intersectW+0.0003f*normalW;
-//        vec4 tempnormal;
-//        if(intersect(d, p).intersects){
-//            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-//        }
+    bool shadows = false;
+    if(shadows){
+        bool intersects = false;
+        vec4 p = intersectW+0.0003f*normalW;
+        vec4 tempnormal;
+        if(intersect(d, p).intersects){
+            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+        }
 
-//    }
-//    else{
-//            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
-//    }
+    }
+    else{
+            color = ambientColor +  light.color*attenuation * (diffuseColor * NL) + (specularColor*pow(refdot,silver.shininess));
+    }
 
-//    color.x = clamp(color.x, 0.0f, 1.0f);
-//    color.y = clamp(color.y, 0.0f, 1.0f);
-//    color.z = clamp(color.z, 0.0f, 1.0f);
-//    color = vec4(color.x, color.y, color.z, 1);
-//    return color;
-//}
+    color.x = clamp(color.x, 0.0f, 1.0f);
+    color.y = clamp(color.y, 0.0f, 1.0f);
+    color.z = clamp(color.z, 0.0f, 1.0f);
+    color = vec4(color.x, color.y, color.z, 1);
+    return color;
+}
 
 
 
@@ -228,9 +247,9 @@ vec4 raytrace(vec4 d, vec4 e){
     vec4 color = vec4(0.f);
     miscData data = intersect(d, e);
     if(data.intersects){
-        color = vec4(1.0f, 0.0f, 0.f, 1.0f);
+        color = calculateLighting(data.intersectW, d, data.normalW);
     } else {
-        color = vec4(1.f);
+        color = vec4(0.f);
     }
 //    int depth = 3;
 //    for(int i = 0; i < depth; i++){
@@ -253,7 +272,7 @@ void main(){
 
     vec4 viewplane = vec4(u*x, v*y, -1.f, 1.f);
     vec4 d = viewplane-eye;
-    d = cam2world*d;
+    d = normalize(cam2world*d);
     vec4 e = cam2world * eye;
     vec4 color = raytrace(d,e);
 
